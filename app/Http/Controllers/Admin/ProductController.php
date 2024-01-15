@@ -28,7 +28,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+
+        return view('portal.admin.product.add-product', compact('categories'));
     }
 
     /**
@@ -39,11 +41,18 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->except('_token');
+        $postData = $request->only(['category_id', 'product_title', 'product_description', 'product_image', 'price_chart']);
 
-        try{
-            $imgName = storeImage($request, 'product_image');
-            $postData['product_image'] = $imgName;
+        try {
+            if($request->hasFile('product_image')){
+                $imgName = storeImage($request, 'product_image');
+                $postData['product_image'] = $imgName;
+            }
+
+            if($request->hasFile('price_chart')){
+                $imgName2 = storeImage($request, 'price_chart');
+                $postData['price_chart'] = $imgName2;
+            }
 
             $product = Product::create($postData);
 
@@ -53,7 +62,7 @@ class ProductController extends Controller
             else{
                 return redirect()->back()->with('error', 'Something went wrong.');
             }
-        } catch (\Exception $ex){
+        } catch (\Exception $ex) {
             return redirect()->back()->with('error', $ex->getMessage());
         }
     }
@@ -73,13 +82,14 @@ class ProductController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function edit($id)
     {
         $product = Product::where('id', $id)->first();
         $categories = Category::all();
-        return response()->json(['status' => 'ture', 'product' => $product, 'categories' => $categories]);
+
+        return view('portal.admin.product.edit-product', compact('product', 'categories'));
     }
 
     /**
@@ -91,18 +101,27 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $postData = $request->except(['_method', '_token']);
+        $postData = $request->only(['category_id', 'product_title', 'product_description', 'product_image', 'price_chart']);
 
-        try{
+        try {
+            if($request->hasFile('product_image')){
+                $imgName = storeImage($request, 'product_image');
+                $postData['product_image'] = $imgName;
+            }
+
+            if($request->hasFile('price_chart')){
+                $imgName2 = storeImage($request, 'price_chart');
+                $postData['price_chart'] = $imgName2;
+            }
+
             $product = Product::where('id', $id)->update($postData);
 
-            if($product){
+            if ($product) {
                 return redirect()->route('product.index')->with('success', 'Successfully updated.');
+            } else {
+                return redirect()->back()->with('error', 'Failed to update the product.');
             }
-            else{
-                return redirect()->back()->with('error', 'Something went wrong.');
-            }
-        } catch (\Exception $ex){
+        } catch (\Exception $ex) {
             return redirect()->back()->with('error', $ex->getMessage());
         }
     }

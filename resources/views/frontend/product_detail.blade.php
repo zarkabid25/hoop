@@ -66,6 +66,7 @@
                                         <div class="tab-pane fade show active" id="thumbOne" role="tabpanel" aria-labelledby="thumbOne-tab">
                                             @php
                                                 $img = (!empty($product->product_image)) ? $product->product_image : "No-Image.png";
+                                                $img2 = (!empty($product->price_chart)) ? $product->price_chart : "No-Image.png";
                                             @endphp
                                             <div class="product__details-nav-thumb w-img">
                                                 <img src="{{ asset('images'."/". $img) }}" alt="">
@@ -95,6 +96,9 @@
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link active" id="des-tab" data-bs-toggle="tab" data-bs-target="#des" type="button" role="tab" aria-controls="des" aria-selected="true">Product Description </button>
                                     </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="aditional-tab" data-bs-toggle="tab" data-bs-target="#aditional" type="button" role="tab" aria-controls="aditional" aria-selected="false">Price Chart</button>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -102,7 +106,15 @@
                     <div class="tab-content" id="prodductDesTaContent">
                         <div class="tab-pane fade active show" id="des" role="tabpanel" aria-labelledby="des-tab">
                             <div class="product__details-des-wrapper">
-                                <p class="des-text mb-35">{{ $product->product_description }}</p>
+                                <p class="des-text mb-35">{!! $product->product_description !!}</p>
+                            </div>
+                        </div>
+
+                        <div  class="tab-pane fade" id="aditional" role="tabpanel" aria-labelledby="aditional-tab">
+                            <div class="product__desc-info">
+                                <div class="product__details-nav-thumb ">
+                                    <img src="{{ asset('images'."/". $img2) }}" width="450" alt="">
+                                </div>
                             </div>
                         </div>
                     </div>

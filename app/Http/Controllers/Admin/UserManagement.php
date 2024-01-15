@@ -55,7 +55,6 @@ class UserManagement extends Controller
             ];
 
             $postData['password'] = bcrypt($postData['password']);
-
             $user = User::create($postData);
 
             Mail::to($user->email)->send(new SendPasswordEmail($mailData));
