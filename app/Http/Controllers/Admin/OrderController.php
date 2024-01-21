@@ -100,7 +100,6 @@ class OrderController extends Controller
     public function show($id)
     {
         $order = Order::with(['customer', 'assignOrder.developer', 'comments', 'orderStatus'])->find($id);
-//        dd($order);
         $assignedDeveloper = '';
 
         if (!empty($order->assignOrder) && !empty($order->assignOrder->developer)) {

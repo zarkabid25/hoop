@@ -10,7 +10,7 @@
                 <!-- small box -->
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>0</h3>
+                        <h3>{{ $monthOrders }}</h3>
 
                         <p>Total Orders</p>
                     </div>
@@ -26,7 +26,7 @@
                 <!-- small box -->
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>0</h3>
+                        <h3>{{ $monthQuotes }}</h3>
 
                         <p>Total Quotes</p>
                     </div>
@@ -42,7 +42,7 @@
                 <!-- small box -->
                 <div class="small-box bg-warning" style="color: white !important;">
                     <div class="inner">
-                        <h3>0</h3>
+                        <h3>{{ $allOrders }}</h3>
 
                         <p>Total Orders</p>
                     </div>
@@ -89,7 +89,7 @@
                 <!-- small box -->
                 <div class="small-box bg-primary">
                     <div class="inner">
-                        <h3>0</h3>
+                        <h3>{{ $cancelledOrders }}</h3>
 
                         <p>Cancelled Orders</p>
                     </div>
@@ -119,7 +119,7 @@
                 <div class="card" id="order_stats" style="display: none">
                     <div class="card-header">
                         <h3 class="card-title">
-                            <i class="fas fa-chart-pie mr-1"></i>
+                            <i class="fas fa-chart-line mr-1"></i>
                             Order Stats
                         </h3>
                         <div class="card-tools">
@@ -131,6 +131,13 @@
                                     <a class="nav-link" href="#revenue-chart" data-toggle="tab">Monthly</a>
                                 </li>
                             </ul>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <span class="px-2" style="background-color: lightgrey;"></span> Indicates Quotes <br>
+                                <span class="px-2" style="background-color: deepskyblue;"></span> Indicates Orders
+                            </div>
                         </div>
                     </div><!-- /.card-header -->
                     <div class="card-body">
@@ -316,38 +323,158 @@
             }
         })
 
-        var data = {
-            labels: ['Label 1', 'Label 2', 'Label 3'],
-            datasets: [{
-                data: [10, 20, 15],
-                backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'],
-                borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'],
-                borderWidth: 1
-            }]
-        };
+        $.ajax({
+            url: '{{ url('/order-chart-data') }}',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                updateBarChart(data);
+                $('#order_type_stats').show();
+            },
+            error: function(error) {
+                console.error('Error fetching chart data:', error);
+            }
+        });
 
-        // Chart configuration
-        var options = {
-            scales: {
-                y: {
-                    beginAtZero: true
+        function updateBarChart(data) {
+            var ctx = document.getElementById('myBarChart').getContext('2d');
+
+            var options = {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        stepSize: 20,
+                        boxWidth: 10
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true
+                    }
                 }
+            };
+
+            var myBarChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: data.datasets,
+                },
+                options: options
+            });
+
+            // Display count on each bar
+            var datasets = myBarChart.data.datasets;
+
+            datasets.forEach(function (dataset, i) {
+                var bars = myBarChart.getDatasetMeta(i).data;
+
+                bars.forEach(function (bar, j) {
+                    var x = bar.x;
+                    var y = bar.y;
+                    var label = dataset.label + ': ' + dataset.data[j];
+                    ctx.fillStyle = 'black'; // Set the font color
+                    ctx.fillText(label, x, y - 5);
+                });
+            });
+        }
+
+        // Sales chart start
+        var salesChartCanvas = document.getElementById('revenue-chart-canvas').getContext('2d')
+
+        var salesChartData = {
+            labels: [],
+            datasets: [
+                {
+                    backgroundColor: 'rgba(60,141,188,0.9)',
+                    borderColor: 'rgba(60,141,188,0.8)',
+                    pointRadius: false,
+                    pointColor: '#3b8bba',
+                    pointStrokeColor: 'rgba(60,141,188,1)',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data: []
+                },
+                {
+                    backgroundColor: 'rgba(210, 214, 222, 1)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: []
+                }
+            ]
+        }
+
+        var salesChartOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+            legend: {
+                display: true,
+                labels: {
+                    usePointStyle: true,
+                    boxWidth: 10
+                }
+            },
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        display: false
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        stepSize: 20,
+                        max: 200
+                    },
+                    gridLines: {
+                        display: true
+                    }
+                }]
             },
             plugins: {
                 legend: {
-                    display: false // Set display to false to hide the legend
+                    display: false
                 }
             }
-        };
+        }
 
-        // Get the context of the canvas element
-        var ctx = document.getElementById('myBarChart').getContext('2d');
-
-        // Create the bar chart
-        var myBarChart = new Chart(ctx, {
-            type: 'bar',
-            data: data,
-            options: options
+        var salesChart = new Chart(salesChartCanvas, {
+            type: 'line',
+            data: salesChartData,
+            options: salesChartOptions
         });
+
+        function updateChartData(type) {
+            $.ajax({
+                url: '{{ url('/getChartData') }}',
+                type: 'GET',
+                data: { type: type },
+                success: function (data) {
+                    salesChart.data.labels = data.labels;
+                    salesChart.data.datasets[0].data = data.orders;
+                    salesChart.data.datasets[1].data = data.quotes;
+                    salesChart.update();
+                },
+                error: function (error) {
+                    console.error('Error fetching chart data:', error);
+                }
+            });
+        }
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            var tabType = $(e.target).text().toLowerCase();
+            updateChartData(tabType);
+        });
+
+        updateChartData('daily');
+
+        // Sales chart end
+
+
+
     </script>
 @endsection

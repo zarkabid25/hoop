@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Order;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -28,11 +30,31 @@ Route::get('/product_details/{id}', function ($id){
 
 Route::get('/contact', [\App\Http\Controllers\Contact\ContactController::class, 'create'])->name('contact');
 Route::post('/contact', [\App\Http\Controllers\Contact\ContactController::class, 'store'])->name('contact.store');
+Route::get('/getChartData', [\App\Http\Controllers\Chart\ChartController::class, 'getSalesChartData']);
+Route::get('/order-chart-data', [\App\Http\Controllers\Chart\ChartController::class, 'getOrderChartData']);
 
 Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function (){
 
     Route::get('/dashboard', function (){
-        return view('portal.admin.dashboard');
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+
+        $monthOrders = Order::whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
+            ->count();
+
+        $monthQuotes = \App\Models\Quote::whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
+            ->count();
+
+        $allOrders = Order::count();
+
+        $cancelledOrders = Order::where('order_status', '2')
+            ->whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
+            ->count();
+
+        return view('portal.admin.dashboard', compact('monthQuotes', 'monthOrders', 'allOrders', 'cancelledOrders'));
     })->name('dashboard.admin');
 
     Route::resources([
@@ -68,7 +90,29 @@ Route::group(['middleware' => 'auth', 'prefix' => 'orders'], function(){
 
 Route::group(['middleware' => 'auth', 'prefix' => 'customer'], function(){
     Route::get('/dashboard', function (){
-        return view('portal.customer.dashboard');
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+        $userId = auth()->user()->id;
+
+        $monthOrders = Order::where('customer_id', $userId)
+            ->whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
+            ->count();
+
+        $monthQuotes = \App\Models\Quote::where('customer_id', $userId)
+            ->whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
+            ->count();
+
+        $allOrders = Order::where('customer_id', $userId)->count();
+
+        $cancelledOrders = Order::where('customer_id', $userId)
+            ->where('order_status', '2')
+            ->whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
+            ->count();
+
+        return view('portal.customer.dashboard', compact('monthQuotes', 'monthOrders', 'allOrders', 'cancelledOrders'));
     })->name('dashboard.customer');
 
     Route::resource('quote', \App\Http\Controllers\Customer\QuotesController::class);
@@ -80,7 +124,21 @@ Route::group(['middleware' => 'auth', 'prefix' => 'customer'], function(){
 Route::group(['middleware' => 'auth', 'prefix' => 'developer'], function(){
 
     Route::get('/dashboard', function (){
-        return view('portal.developer.dashboard');
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+        $userId = auth()->user()->id;
+
+        $monthOrders = \App\Models\AssignOrder::where('developer_id', $userId)
+            ->where('status', 'assign')
+            ->whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
+            ->count();
+
+        $allOrders = \App\Models\AssignOrder::where('developer_id', $userId)
+            ->where('status', 'assign')
+            ->count();
+
+        return view('portal.developer.dashboard', compact('monthOrders', 'allOrders'));
     })->name('dashboard.developer');
 
 });
@@ -88,7 +146,19 @@ Route::group(['middleware' => 'auth', 'prefix' => 'developer'], function(){
 Route::group(['middleware' => 'auth', 'prefix' => 'sales'], function(){
 
     Route::get('/dashboard', function (){
-        return view('portal.developer.dashboard');
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+        $user = User::where('referred', auth()->user()->email)->first(['id']);
+
+        $monthOrders = Order::where('customer_id', $user->id)
+            ->whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->count();
+
+        $allOrders = Order::where('customer_id', $user->id)->count();
+
+
+        return view('portal.sales.dashboard', compact('monthOrders', 'allOrders'));
     })->name('dashboard.sales');
 
     Route::get('/rewards', [\App\Http\Controllers\Reward\RewardController::class, 'index'])->name('reward.index');

@@ -10,7 +10,7 @@
                 <!-- small box -->
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>0</h3>
+                        <h3>{{ $monthOrders }}</h3>
 
                         <p>Total Orders</p>
                     </div>
@@ -26,7 +26,7 @@
                 <!-- small box -->
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>0</h3>
+                        <h3>{{ $monthQuotes }}</h3>
 
                         <p>Total Quotes</p>
                     </div>
@@ -58,7 +58,7 @@
                 <!-- small box -->
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3>0</h3>
+                        <h3>{{ $allOrders }}</h3>
 
                         <p>Total Paid</p>
                     </div>
@@ -89,7 +89,7 @@
                 <!-- small box -->
                 <div class="small-box bg-primary">
                     <div class="inner">
-                        <h3>0</h3>
+                        <h3>{{ $cancelledOrders }}</h3>
 
                         <p>Cancelled Orders</p>
                     </div>
@@ -105,66 +105,66 @@
         <!-- Main row -->
         <div class="row">
             <!-- Left col -->
-            <section class="col-lg-7 connectedSortable">
-                <div class="col-5" style="margin-bottom: 20px">
-                    <label for="graph_type">Graphs List</label>
-                    <select id="graph_type" class="form-control">
-                        <option selected disabled>Select Graph</option>
-                        <option value="order_stats">Order Stats</option>
-                        <option value="order_type_stats">Order-type Stats</option>
-                        <option value="sale_per_month">Sale Per Month</option>
-                    </select>
-                </div>
-                <!-- Custom tabs (Charts with tabs)-->
-                <div class="card" id="order_stats" style="display: none">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-chart-pie mr-1"></i>
-                            Order Stats
-                        </h3>
-                        <div class="card-tools">
-                            <ul class="nav nav-pills ml-auto">
-                                <li class="nav-item">
-                                    <a class="nav-link active" href="#revenue-chart" data-toggle="tab">Daily</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#revenue-chart" data-toggle="tab">Monthly</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div><!-- /.card-header -->
-                    <div class="card-body">
-                        <div class="tab-content p-0">
-                            <!-- Morris chart - Sales -->
-                            <div class="chart tab-pane active" id="revenue-chart"
-                                 style="position: relative; height: 300px;">
-                                <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas>
-                            </div>
-                            <div class="chart tab-pane" id="sales-chart"
-                                 style="position: relative; height: 300px;">
-                                <canvas id="sales-chart-canvas" height="300" style="height: 300px;"></canvas>
-                            </div>
-                        </div>
-                    </div><!-- /.card-body -->
-                </div>
-                <!-- /.card -->
+{{--            <section class="col-lg-7 connectedSortable">--}}
+{{--                <div class="col-5" style="margin-bottom: 20px">--}}
+{{--                    <label for="graph_type">Graphs List</label>--}}
+{{--                    <select id="graph_type" class="form-control">--}}
+{{--                        <option selected disabled>Select Graph</option>--}}
+{{--                        <option value="order_stats">Order Stats</option>--}}
+{{--                        <option value="order_type_stats">Order-type Stats</option>--}}
+{{--                        <option value="sale_per_month">Sale Per Month</option>--}}
+{{--                    </select>--}}
+{{--                </div>--}}
+{{--                <!-- Custom tabs (Charts with tabs)-->--}}
+{{--                <div class="card" id="order_stats" style="display: none">--}}
+{{--                    <div class="card-header">--}}
+{{--                        <h3 class="card-title">--}}
+{{--                            <i class="fas fa-chart-pie mr-1"></i>--}}
+{{--                            Order Stats--}}
+{{--                        </h3>--}}
+{{--                        <div class="card-tools">--}}
+{{--                            <ul class="nav nav-pills ml-auto">--}}
+{{--                                <li class="nav-item">--}}
+{{--                                    <a class="nav-link active" href="#revenue-chart" data-toggle="tab">Daily</a>--}}
+{{--                                </li>--}}
+{{--                                <li class="nav-item">--}}
+{{--                                    <a class="nav-link" href="#revenue-chart" data-toggle="tab">Monthly</a>--}}
+{{--                                </li>--}}
+{{--                            </ul>--}}
+{{--                        </div>--}}
+{{--                    </div><!-- /.card-header -->--}}
+{{--                    <div class="card-body">--}}
+{{--                        <div class="tab-content p-0">--}}
+{{--                            <!-- Morris chart - Sales -->--}}
+{{--                            <div class="chart tab-pane active" id="revenue-chart"--}}
+{{--                                 style="position: relative; height: 300px;">--}}
+{{--                                <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas>--}}
+{{--                            </div>--}}
+{{--                            <div class="chart tab-pane" id="sales-chart"--}}
+{{--                                 style="position: relative; height: 300px;">--}}
+{{--                                <canvas id="sales-chart-canvas" height="300" style="height: 300px;"></canvas>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div><!-- /.card-body -->--}}
+{{--                </div>--}}
+{{--                <!-- /.card -->--}}
 
 
-                <!-- TO DO List -->
-                <div class="card" id="order_type_stats" style="display: none">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-chart-bar mr-1"></i>
-                            Order-Type Stats
-                        </h3>
-                    </div><!-- /.card-header -->
-                    <div class="card-body">
-                        <canvas id="myBarChart"></canvas>
+{{--                <!-- TO DO List -->--}}
+{{--                <div class="card" id="order_type_stats" style="display: none">--}}
+{{--                    <div class="card-header">--}}
+{{--                        <h3 class="card-title">--}}
+{{--                            <i class="fas fa-chart-bar mr-1"></i>--}}
+{{--                            Order-Type Stats--}}
+{{--                        </h3>--}}
+{{--                    </div><!-- /.card-header -->--}}
+{{--                    <div class="card-body">--}}
+{{--                        <canvas id="myBarChart"></canvas>--}}
 
-                    </div><!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-            </section>
+{{--                    </div><!-- /.card-body -->--}}
+{{--                </div>--}}
+{{--                <!-- /.card -->--}}
+{{--            </section>--}}
             <!-- /.Left col -->
             <!-- right col (We are only adding the ID to make the widgets sortable)-->
             <section class="col-lg-5 connectedSortable">

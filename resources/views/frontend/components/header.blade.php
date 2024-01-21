@@ -124,19 +124,23 @@
 <!-- back to top end -->
 
 <!-- header-start -->
-<header class="header d-blue-bg">
+<header class="header d-blue-bg navbar navbar-expand-lg p-lg-0 p-2 navbar-dark">
     <div class="width-control">
-        <div class="header-top">
+        <div class="header-top py-2">
             <div class="container">
+
                 <div class="header-inner">
                     <div class="row align-items-center justify-content-between">
                         <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4">
-                            <div class="header__info">
+                            <div class="header__info d-flex align-items-center justify-content-between">
                                 <div class="logo">
                                     <a href="{{ url('/') }}" class="logo-image">
-                                        <img src="{{ asset('assets/img/logo/brand.png') }}" width="130" alt="logo">
+                                        <img class="mb-0" src="{{ asset('assets/img/logo/brand.png') }}" width="100" alt="logo">
                                     </a>
                                 </div>
+                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-5 d-none d-lg-block">
@@ -157,13 +161,13 @@
                 </div>
             </div>
         </div>
-        <div class="header-mid">
+        <div class="header-mid ">
             <div class="container">
-                <div class="heade-mid-inner">
-                    <div class="d-flex w-100 align-items-center justify-content-center justify-content-lg-between flex-wrap">
-                        <div class="d-flex  flex-wrap ">
-                            <div class="header-inner-start
-                                ">
+
+                <div id="navbarNav" class="heade-mid-inner collapse navbar-collapse border-0">
+                    <div class="d-flex w-100 align-items-center justify-content-center justify-content-lg-between flex-wrap flex-column flex-lg-row">
+                        <div class="d-flex flex-wrap ">
+                            <div class="header-inner-start">
                                 <div class="header__currency border-right">
                                     <div class="s-name">
                                             <span class="text-sm-start text-center">
@@ -196,7 +200,7 @@
                         </div>
 
                         <div class="mt-lg-0 mt-2">
-                            <div class="header-action">
+                            <div class="header-action flex-column flex-lg-row">
                                 <div class="block-userlink ">
                                     <a class="icon-link pe-2" href="{{ route('login') }}">
                                         <i class="flaticon-user"></i>
@@ -229,5 +233,3 @@
         </div>
     </div>
 </header>
-
-

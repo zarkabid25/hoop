@@ -7,7 +7,7 @@
     <main >
         <!-- slider-area-start -->
 
-        <div class="container-fluid overflow-hidden py-3">
+        <div class="container-fluid overflow-hidden py-5">
 
             <div class="swiper mySwiper">
                 <div class="swiper-wrapper">
@@ -144,66 +144,43 @@
 
         <div class="width-control">
                 <!-- topsell__area-start -->
-                <section class="topsell__area-1 " id="vector-art">
-                    @forelse($products as $product)
-                        @php
-                            $img = (!empty($product->product_image)) ? $product->product_image : "No-Image.png";
-                        @endphp
+                <section class="topsell__area-1 py-4" id="vector-art">
                     <div class="container">
                         <div class="row">
                             <div class="col-xl-12">
-                                <div class="section__head d-flex justify-content-between mb-10">
+                                <div class="section__head d-flex justify-content-between mb-30">
                                     <div class="section__title">
-                                        <h5 class="st-titile">{{ ucwords($product->category->category_name) }}</h5>
+                                        <h5 class="st-titile">{{ ucwords($products->first()->category->category_name) }}</h5>
                                     </div>
+                                  
                                     <div class="button-wrap">
                                         <a href="javacript:void(0);">View All Product <i class="fal fa-chevron-right"></i></a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                         </div>
+                          <div class="container">
                         <div class="row">
                             <div class="product-bs-slider">
                                 <div class="product-slider swiper-container">
                                     <div class="swiper-wrapper">
-                                        <div class="product__item swiper-slide">
+                                    @forelse($products as $product)
+                                    @php
+                                        $img = (!empty($product->product_image)) ? $product->product_image : "No-Image.png";
+                                    @endphp
+                                        <div class="product__item">
                                             <div class="product__thumb fix">
                                                 <div class="product-image w-img">
                                                     <a href="javacript:void(0);">
-                                                        <img src="{{ asset('images'."/". $img) }}" alt="product">
+                                                        <img src="{{ asset('images'.'/'. $img) }}" alt="product">
                                                     </a>
                                                 </div>
-{{--                                                <div class="product__offer">--}}
-{{--                                                    <span class="discount">-15%</span>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="product-action">--}}
-{{--                                                    <a href="#" class="icon-box icon-box-1" data-bs-toggle="modal" data-bs-target="#productModalId">--}}
-{{--                                                        <i class="fal fa-eye"></i>--}}
-{{--                                                        <i class="fal fa-eye"></i>--}}
-{{--                                                    </a>--}}
-{{--                                                </div>--}}
+
                                             </div>
                                             <div class="product__content">
                                                 <h6><a href="javacript:void(0);">{{ ucwords($product->product_title) }}</a></h6>
-{{--                                                <div class="rating mb-5">--}}
-{{--                                                    <ul>--}}
-{{--                                                        <li><a href="#"><i class="fal fa-star"></i></a></li>--}}
-{{--                                                        <li><a href="#"><i class="fal fa-star"></i></a></li>--}}
-{{--                                                        <li><a href="#"><i class="fal fa-star"></i></a></li>--}}
-{{--                                                        <li><a href="#"><i class="fal fa-star"></i></a></li>--}}
-{{--                                                        <li><a href="#"><i class="fal fa-star"></i></a></li>--}}
-{{--                                                    </ul>--}}
-{{--                                                    <span>(01 review)</span>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="price mb-10">--}}
-{{--                                                    <span>$105-$110</span>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="progress mb-5">--}}
-{{--                                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 10%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="progress-rate">--}}
-{{--                                                    <span>Sold:312/1225</span>--}}
-{{--                                                </div>--}}
+
                                             </div>
                                             <div class="product__add-cart text-center">
                                                 <a href="{{ route('product.details', ['id' => $product->id]) }}" type="button" class="cart-btn product-modal-sidebar-open-btn d-flex align-items-center justify-content-center w-100">
@@ -211,6 +188,8 @@
                                                 </a>
                                             </div>
                                         </div>
+                                        @empty
+                    @endforelse
                                     </div>
                                 </div>
                                 <!-- If we need navigation buttons -->
@@ -218,18 +197,16 @@
                                 <div class="bs-button bs-button-next"><i class="fal fa-chevron-right"></i></div>
                             </div>
                         </div>
-                    </div>
-                    @empty
-                    @endforelse
+                   </div>
                 </section>
                 <!-- topsell__area-end -->
 
 
             <!-- featured-start -->
-            <section class="featured">
+            <section class="featured py-3">
                 <div class="container">
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-12 mb-35">
                             <div class="section__title">
                                 <h5 class="st-titile">What We Offer</h5>
                             </div>
@@ -283,7 +260,7 @@
 
 
             <!-- banner__area-start -->
-            <section class="banner__area banner" id="patches">
+            <section class="banner__area banner py-3" id="patches">
                 <div class="container">
                     <div class="row">
                         <div class="col-xl-4 col-lg-6 col-md-12">
@@ -360,11 +337,11 @@
             <!-- banner__area-end -->
 
             <!-- recomand-product-area-start -->
-            <section class="recomand-product-area design" id="design">
+            <section class="recomand-product-area design py-3" id="design">
                 <div class="container">
                     <div class="row">
                         <div class="col-xl-12">
-                            <div class="section__head d-flex justify-content-between mb-10">
+                            <div class="section__head d-flex justify-content-between mb-35">
                                 <div class="section__title">
                                     <h5 class="st-titile">Design Recommended For You</h5>
                                 </div>
@@ -609,7 +586,7 @@
             <!-- recomand-product-area-end -->
 
             <!-- brand-area-start -->
-            <section class="brand-area brand-area-d">
+            <section class="brand-area brand-area-d py-3">
                 <div class="container">
                     <div class="brand-slider swiper-container">
                         <div class="swiper-wrapper">
@@ -638,7 +615,7 @@
             <!-- brand-area-end -->
 
             <!-- features__area-start -->
-            <section class="features__area">
+            <section class="features__area py-3">
                 <div class="container">
                     <div class="row row-cols-xxl-4 row-cols-xl-4 row-cols-lg-4 row-cols-md-2 row-cols-sm-2 row-cols-1 gx-0">
                         <div class="col">

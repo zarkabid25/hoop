@@ -207,6 +207,7 @@
 	///////////////////////////////////////////////////
 	// 13. Masonary Js
 	$(".package__slider").owlCarousel({
+
 		//add owl carousel in activation class
 		loop: true,
 		margin: 30,
@@ -367,12 +368,57 @@
 	  });
 	  }
 
+
+	  if (jQuery(".mySwiper").length > 0) {
+		let testimonialTwo = new Swiper('.mySwiper', {
+			slidesPerView: 1,
+			spaceBetween: 20,
+			// direction: 'vertical',
+			loop: true,
+			observer: true,
+			observeParents: true,
+			autoplay: {
+					delay: 6000,
+				},
+			
+			// If we need pagination
+			pagination: {
+				el: '.swiper-pagination',
+				clickable: true,
+			},
+			// Navigation arrows
+			navigation: {
+				nextEl: '.bs-button-next',
+				prevEl: '.bs-button-prev',
+			},
+			
+			// And if we need scrollbar
+			scrollbar: {
+				el: '.swiper-scrollbar',
+			},
+			breakpoints: {
+				550: {
+					slidesPerView: 3,
+				},
+				768: {
+					slidesPerView: 5,
+				},
+				1200: {
+					slidesPerView: 8,
+				},
+				1400: {
+					slidesPerView: 8,
+					}
+				}
+			});
+	}
 	////////////////////////////////////////////////////
 	// 11. Product Slider Activation Js (Top Deals Of the Day Section)
 	if (jQuery(".product-slider").length > 0) {
 		let testimonialTwo = new Swiper('.product-slider', {
 			slidesPerView: 1,
 			spaceBetween: 0,
+			pagination: false,
 			// direction: 'vertical',
 			loop: true,
 			observer: true,
@@ -619,6 +665,4 @@
 		setupSequence();
 	}
 	
-	
-
 })(jQuery);

@@ -13,7 +13,7 @@
             <div class="offcanvas__content">
                 <div class="offcanvas__logo mb-40">
                     <a href="index.html">
-                        <img src="assets/img/logo/logo-white.png" alt="logo">
+                        <img src="{{ asset('assets/img/logo/logo-white.png') }}" alt="logo">
                     </a>
                 </div>
                 <div class="offcanvas__search mb-25">
