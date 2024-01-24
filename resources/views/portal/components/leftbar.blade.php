@@ -166,7 +166,7 @@
 
             @if(auth()->user()->role == 'sales')
                 <li class="nav-item {{ (request()->routeIs('reward.index')) ? 'menu-is-opening menu-open' : '' }}">
-                    <a href="javascript:void(0)" class="nav-link {{ request()->routeIs('reward.inde') ? 'active' : '' }}">
+                    <a href="javascript:void(0)" class="nav-link {{ request()->routeIs('reward.index') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-gift" style="color: violet"></i>
                         <p>
                             Reward
@@ -178,6 +178,33 @@
                             <a href="{{ route('reward.index') }}" class="nav-link {{ request()->routeIs('reward.index') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>View Rewards</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            @endif
+
+            @if(auth()->user()->role == 'admin')
+                <li class="nav-item {{ (request()->routeIs('company-details-create')) ? 'menu-is-opening menu-open' : '' }}">
+                    <a href="javascript:void(0)" class="nav-link {{ request()->routeIs('company-details-create') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-gift" style="color: violet"></i>
+                        <p>
+                            Company Details
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview" @if(request()->routeIs('company-details-create')) style="display: block" @endif>
+                        <li class="nav-item">
+                            <a href="{{ route('company-details-create') }}" class="nav-link {{ request()->routeIs('company-details-create') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Add Details</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('company-details-create') }}" class="nav-link {{ request()->routeIs('company-details-create') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Edit Details</p>
                             </a>
                         </li>
                     </ul>

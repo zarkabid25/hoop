@@ -21,7 +21,7 @@
                     </div>
 
                     <div>
-                        @if(auth()->user()->role !== 'customer')
+                        @if(auth()->user()->role !== 'customer' && auth()->user()->role !== 'sales')
                             <div class="row" style="justify-content: center">
                                 <div class="col-md-4">
                                     <div class="form-group">
@@ -117,7 +117,7 @@
                             <div class="col-md-4">
                                 <div class="form-group mb-3">
                                     <label for="email">Email</label>
-                                    <input type="email" name="email" class="form-control" value="{{ $user->email }}" disabled id="email" />
+                                    <input type="email" name="email" class="form-control" value="{{ $user->email }}" readonly id="email" />
 
                                     @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -143,19 +143,42 @@
                             @endif
                         </div>
 
-                        <div  class="row" style="justify-content: center">
-                            <div class="col-md-4">
-                                <div class="form-group mb-3">
-                                    <label for="phone">Phone Number</label>
-                                    <input type="number" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ (!empty($user->phone) ? $user->phone : '') }}" id="phone" autocomplete />
+                        @if(auth()->user()->role == 'sales')
+                            @forelse($companyDetails as $companyDetail)
+                                <div  class="row" style="justify-content: center">
+                                    <div class="col-md-4">
+                                        <div class="form-group mb-3">
+                                            <label for="phone">{{ $companyDetail->field_title }}</label>
+                                            <input type="text" name="{{ 'field_value_'.$companyDetail->id }}" class="form-control @error('field_value_'.$companyDetail->id) is-invalid @enderror" value="{{ $companyDetail->field_value }}" id="{{ 'field_value_'.$companyDetail->id }}" readonly autocomplete />
 
-                                    @error('phone')
-                                    <span class="invalid-feedback" role="alert">
+                                            @error('field_value_'.$companyDetail->id)
+                                            <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                @empty
+                            @endforelse
+                        @endif
+
+
+                        <div  class="row" style="justify-content: center">
+                            @if(auth()->user()->role !== 'sales')
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label for="phone">Phone Number</label>
+                                        <input type="number" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ (!empty($user->phone) ? $user->phone : '') }}" id="phone" autocomplete />
+
+                                        @error('phone')
+                                        <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
-                                    @enderror
+                                        @enderror
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
 
                             @if(auth()->user()->role == 'customer')
                                 <div class="col-md-4">
@@ -206,11 +229,13 @@
                         @endif
                     </div>
 
-                    <div class="row" style="justify-content: right">
-                        <div class="col-md-4 mb-3">
-                            <a href="{{ route('profile.change_passowrd', ['id' => $user->id]) }}">Change Password</a>
+                    @if(auth()->user()->role !== 'sales')
+                        <div class="row" style="justify-content: right">
+                            <div class="col-md-4 mb-3">
+                                <a href="{{ route('profile.change_passowrd', ['id' => $user->id]) }}">Change Password</a>
+                            </div>
                         </div>
-                    </div>
+                    @endif
 
                     <div class="row" style="justify-content: right">
                         <div class="col-md-4 mb-3">

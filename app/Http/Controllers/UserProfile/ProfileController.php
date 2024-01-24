@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UserProfile;
 
 use App\Http\Controllers\Controller;
+use App\Models\CompanyDetail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -11,8 +12,9 @@ class ProfileController extends Controller
 {
     public function index(){
         $user = User::where('id', auth()->user()->id)->first();
+        $companyDetails = CompanyDetail::all();
 
-        return view('portal.profile.profile', compact('user'));
+        return view('portal.profile.profile', compact('user', 'companyDetails'));
     }
 
     public function update(Request $request, $id){

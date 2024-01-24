@@ -61,11 +61,17 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function (){
         'user_management' => \App\Http\Controllers\Admin\UserManagement::class,
         'category' => \App\Http\Controllers\Admin\CategoryController::class,
         'product' => \App\Http\Controllers\Admin\ProductController::class,
-        'order' => \App\Http\Controllers\Admin\OrderController::class
+        'order' => \App\Http\Controllers\Admin\OrderController::class,
+        'company_details' => \App\Http\Controllers\Admin\OrderController::class,
     ]);
 
     Route::get('/order_status/update', [\App\Http\Controllers\Admin\OrderController::class, 'statusUpdate'])->name('order-status-update');
     Route::get('/order/assign/{devId}/{orderId}/{status}', [\App\Http\Controllers\Admin\OrderController::class, 'assignOrder'])->name('order-assign');
+    Route::get('/company_details_create', [\App\Http\Controllers\CompanyDetails\CompanyDetailController::class, 'create'])->name('company-details-create');
+    Route::post('/company_details_store', [\App\Http\Controllers\CompanyDetails\CompanyDetailController::class, 'store'])->name('company-details.store');
+    Route::get('/company_details/{id}/edit', [\App\Http\Controllers\CompanyDetails\CompanyDetailController::class, 'edit'])->name('company-details.edit');
+    Route::get('/company_details', [\App\Http\Controllers\CompanyDetails\CompanyDetailController::class, 'index'])->name('company-details');
+
 });
 
 Route::group(['middleware' => 'auth',], function(){
