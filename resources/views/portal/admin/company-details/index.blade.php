@@ -13,6 +13,7 @@
                 <th>Sr.#</th>
                 <th>Field Title</th>
                 <th>Field Value</th>
+                <th>Action</th>
             </tr>
             </thead>
             <tbody>
@@ -21,20 +22,16 @@
             @forelse($companyDetails as $companyDetail)
                 <tr>
                     <td>{{ $count++ }}</td>
-                    <td>{{ ucwords($category->category_name) }}</td>
+                    <td>{{ ucwords($companyDetail->field_title) }}</td>
+                    <td>{{ ucwords($companyDetail->field_value) }}</td>
                     <td>
                         <div>
                             <div style="display: inline-block">
-                                <a href="javascript:void(0);" class="btn btn-info" onclick="editCat({{ $category->id }});">Edit</a>
+                                <a href="{{ route('company-details.edit', ['id' => $companyDetail->id]) }}" class="btn btn-info">Edit</a>
                             </div>
 
                             <div style="display: inline-block">
-                                <form action="{{ route('category.destroy', ['category' => $category->id]) }}" method="post" class="delete">
-                                    @method('delete')
-                                    @csrf
-
-                                    <button type="button" class="btn btn-danger del_btn">Delete</button>
-                                </form>
+                                <a href="{{ route('company-details.delete', ['id' => $companyDetail->id]) }}" class="btn btn-danger" >Delete</a>
                             </div>
                         </div>
                     </td>

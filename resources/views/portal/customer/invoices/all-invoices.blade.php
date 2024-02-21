@@ -36,6 +36,32 @@
                     </div>
                 </div>
             </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h6>Manually Generate Invoice</h6>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('manual-invoice-download') }}" method="post">
+                        @csrf
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="invoice_start_date">Invoice Start Date:</label>
+                                <input type="date" name="invoice_start_date" class="form-control" />
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="invoice_end_date">Invoice End Date:</label>
+                                <input type="date" name="invoice_end_date" class="form-control" />
+                            </div>
+
+                            <div class="col-md-4" style="padding-top: 30px">
+                                <button type="submit" class="btn" id="generate_invoice" style="color: white; background-color: #17a2b8">Generate Invoice</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <div id="table_section">
@@ -87,6 +113,21 @@
                }
            });
         });
+
+        {{--$('#generate_invoice').on('click', function (){--}}
+        {{--    let start = $('#invoice_start_date').val();--}}
+        {{--    let end = $('#invoice_end_date').val();--}}
+
+        {{--    $.ajax({--}}
+        {{--        url: '{{ route('manual-invoice-download') }}',--}}
+        {{--        type: 'GET',--}}
+        {{--        dataType: 'JSON',--}}
+        {{--        data: {start:start, end:end},--}}
+        {{--        success: function (response){--}}
+        {{--            $('#table_section').html(response.data);--}}
+        {{--        }--}}
+        {{--    });--}}
+        {{--});--}}
 
         $('#reset_btn').on('click', function (){
            location.reload();

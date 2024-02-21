@@ -2,6 +2,8 @@
 
 use App\Models\Order;
 use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +20,17 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
+Route::get('/clear', function() {
+
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('config:cache');
+    Artisan::call('view:clear');
+
+    return "Cleared!";
+
+});
+
 Route::get('/', function () {
     $products = \App\Models\Product::with('category')->get();
 
@@ -32,6 +45,7 @@ Route::get('/contact', [\App\Http\Controllers\Contact\ContactController::class, 
 Route::post('/contact', [\App\Http\Controllers\Contact\ContactController::class, 'store'])->name('contact.store');
 Route::get('/getChartData', [\App\Http\Controllers\Chart\ChartController::class, 'getSalesChartData']);
 Route::get('/order-chart-data', [\App\Http\Controllers\Chart\ChartController::class, 'getOrderChartData']);
+Route::get('/download-image/{filename}', [\App\Http\Controllers\FileController::class, 'downloadImage'])->name('image.download');
 
 Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function (){
 
@@ -47,14 +61,25 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function (){
             ->whereMonth('created_at', $currentMonth)
             ->count();
 
-        $allOrders = Order::count();
+        $allOrders = Order::with('customer')->orderBy('id', 'DESC')->get();
+
+        $filteredOrders = $allOrders->filter(function ($order) {
+            $createdAt = Carbon::parse($order->created_at);
+            return $createdAt->isToday() || $createdAt->isYesterday();
+        });
+
+        $filteredOrdersCollection = collect($filteredOrders);
+        $orders = $filteredOrdersCollection->values();
+
+        $allOrders = $allOrders->count();
+
 
         $cancelledOrders = Order::where('order_status', '2')
             ->whereYear('created_at', $currentYear)
             ->whereMonth('created_at', $currentMonth)
             ->count();
 
-        return view('portal.admin.dashboard', compact('monthQuotes', 'monthOrders', 'allOrders', 'cancelledOrders'));
+        return view('portal.admin.dashboard', compact('monthQuotes', 'monthOrders', 'allOrders', 'orders', 'cancelledOrders'));
     })->name('dashboard.admin');
 
     Route::resources([
@@ -62,7 +87,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function (){
         'category' => \App\Http\Controllers\Admin\CategoryController::class,
         'product' => \App\Http\Controllers\Admin\ProductController::class,
         'order' => \App\Http\Controllers\Admin\OrderController::class,
-        'company_details' => \App\Http\Controllers\Admin\OrderController::class,
+        // 'company_details' => \App\Http\Controllers\Admin\OrderController::class,
     ]);
 
     Route::get('/order_status/update', [\App\Http\Controllers\Admin\OrderController::class, 'statusUpdate'])->name('order-status-update');
@@ -71,6 +96,9 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function (){
     Route::post('/company_details_store', [\App\Http\Controllers\CompanyDetails\CompanyDetailController::class, 'store'])->name('company-details.store');
     Route::get('/company_details/{id}/edit', [\App\Http\Controllers\CompanyDetails\CompanyDetailController::class, 'edit'])->name('company-details.edit');
     Route::get('/company_details', [\App\Http\Controllers\CompanyDetails\CompanyDetailController::class, 'index'])->name('company-details');
+    Route::post('/company_details_update/{id}', [\App\Http\Controllers\CompanyDetails\CompanyDetailController::class, 'update'])->name('company-details.update');
+    Route::get('/company_details/{id}/delete', [\App\Http\Controllers\CompanyDetails\CompanyDetailController::class, 'delete'])->name('company-details.delete');
+    Route::post('/placement_prices/update', [\App\Http\Controllers\Admin\UserManagement::class, 'placementPriceUpdate'])->name('placement-price-update');
 
 });
 
@@ -83,8 +111,15 @@ Route::group(['middleware' => 'auth',], function(){
     Route::get('/profile/change_password/{id}', [\App\Http\Controllers\UserProfile\ProfileController::class, 'changePassword'])->name('profile.change_passowrd');
     Route::post('/profile/password_update/{id}', [\App\Http\Controllers\UserProfile\ProfileController::class, 'updatePassword'])->name('profile.password-update');
 
+
     Route::post('/comment', [\App\Http\Controllers\Comment\CommentController::class, 'store'])->name('comment.store');
     Route::post('/order_status', [\App\Http\Controllers\Admin\OrderController::class, 'orderStatus'])->name('order.status');
+    Route::get('/filter_order', [\App\Http\Controllers\Admin\OrderController::class, 'filterOrder'])->name('filter_order');
+
+    Route::get('/invoices', [\App\Http\Controllers\Customer\InvoiceController::class, 'invoices'])->name('invoices');
+    Route::get('/invoice_download/{id}', [\App\Http\Controllers\Customer\InvoiceController::class,'downloadInvoice'])->name('invoice-download');
+    Route::post('/manual_generate_invoice', [\App\Http\Controllers\Customer\InvoiceController::class,'manualGenerateInvoice'])->name('manual-invoice-download');
+    Route::get('/filter_invoices', [\App\Http\Controllers\Customer\InvoiceController::class, 'filterInvoiceData'])->name('filter-invoices');
 
 });
 
@@ -110,7 +145,17 @@ Route::group(['middleware' => 'auth', 'prefix' => 'customer'], function(){
             ->whereMonth('created_at', $currentMonth)
             ->count();
 
-        $allOrders = Order::where('customer_id', $userId)->count();
+        $allOrders = Order::with('customer')->where('customer_id', $userId)->orderBy('id', 'DESC')->get();
+
+        $filteredOrders = $allOrders->filter(function ($order) use ($userId) {
+            return $order->customer_id == $userId && Carbon::parse($order->created_at)->isToday();
+        });
+
+        $filteredOrdersCollection = collect($filteredOrders);
+        $orders = $filteredOrdersCollection->values();
+
+        $totalPrice = $allOrders->sum('price');
+        $allOrdersCount = $allOrders->count();
 
         $cancelledOrders = Order::where('customer_id', $userId)
             ->where('order_status', '2')
@@ -118,13 +163,11 @@ Route::group(['middleware' => 'auth', 'prefix' => 'customer'], function(){
             ->whereMonth('created_at', $currentMonth)
             ->count();
 
-        return view('portal.customer.dashboard', compact('monthQuotes', 'monthOrders', 'allOrders', 'cancelledOrders'));
+        return view('portal.customer.dashboard', compact('monthQuotes', 'monthOrders', 'orders', 'cancelledOrders', 'allOrdersCount', 'totalPrice'));
     })->name('dashboard.customer');
 
     Route::resource('quote', \App\Http\Controllers\Customer\QuotesController::class);
-    Route::get('/invoices', [\App\Http\Controllers\Customer\InvoiceController::class, 'invoices'])->name('invoices');
-    Route::get('/invoice_download/{id}', [\App\Http\Controllers\Customer\InvoiceController::class,'downloadInvoice'])->name('invoice-download');
-    Route::get('/filter_invoices', [\App\Http\Controllers\Customer\InvoiceController::class, 'filterInvoiceData'])->name('filter-invoices');
+
 });
 
 Route::group(['middleware' => 'auth', 'prefix' => 'developer'], function(){
@@ -132,6 +175,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'developer'], function(){
     Route::get('/dashboard', function (){
         $currentMonth = now()->month;
         $currentYear = now()->year;
+        $currentDate = now()->toDateString();
         $userId = auth()->user()->id;
 
         $monthOrders = \App\Models\AssignOrder::where('developer_id', $userId)
@@ -140,32 +184,54 @@ Route::group(['middleware' => 'auth', 'prefix' => 'developer'], function(){
             ->whereMonth('created_at', $currentMonth)
             ->count();
 
+        $orders = \App\Models\AssignOrder::where('developer_id', $userId)
+            ->where('status', 'assign')
+            ->whereDate('created_at', $currentDate)
+            ->get();
+
         $allOrders = \App\Models\AssignOrder::where('developer_id', $userId)
             ->where('status', 'assign')
             ->count();
 
-        return view('portal.developer.dashboard', compact('monthOrders', 'allOrders'));
+        return view('portal.developer.dashboard', compact('monthOrders', 'allOrders', 'orders'));
     })->name('dashboard.developer');
 
 });
 
 Route::group(['middleware' => 'auth', 'prefix' => 'sales'], function(){
 
-    Route::get('/dashboard', function (){
+    Route::get('/dashboard', function () {
         $currentMonth = now()->month;
         $currentYear = now()->year;
-        $user = User::where('referred', auth()->user()->email)->first(['id']);
+        $users = User::where('referred', auth()->user()->email)->get(['id']);
 
-        $monthOrders = Order::where('customer_id', $user->id)
-            ->whereMonth('created_at', $currentMonth)
-            ->whereYear('created_at', $currentYear)
-            ->count();
+        if ($users->isNotEmpty()) {
+            $userCount = $users->count();
 
-        $allOrders = Order::where('customer_id', $user->id)->count();
+            $monthOrders = Order::whereIn('customer_id', $users->pluck('id'))
+                ->whereMonth('created_at', $currentMonth)
+                ->whereYear('created_at', $currentYear)
+                ->count();
 
+            $allOrders = Order::whereIn('customer_id', $users->pluck('id'))->count();
 
-        return view('portal.sales.dashboard', compact('monthOrders', 'allOrders'));
+            $today = Carbon::today();
+
+            $orders = Order::whereIn('customer_id', $users->pluck('id'))
+                ->whereDate('created_at', $today)
+                ->get();
+
+            return view('portal.sales.dashboard', compact('monthOrders', 'allOrders', 'userCount', 'orders'));
+        } else {
+            return view('portal.sales.dashboard', [
+                'monthOrders' => 0,
+                'allOrders' => 0,
+                'userCount' => 0,
+                'dailyOrdersCount' => 0,
+            ]);
+        }
     })->name('dashboard.sales');
+
 
     Route::get('/rewards', [\App\Http\Controllers\Reward\RewardController::class, 'index'])->name('reward.index');
     Route::get('/order_notification/{id}', [\App\Http\Controllers\Reward\RewardController::class, 'notificationOrder'])->name('reward.notification.order');

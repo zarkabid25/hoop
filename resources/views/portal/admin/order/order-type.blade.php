@@ -8,15 +8,19 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
             <div class="modal-body">
                 <label for="order_type">Order Type</label>
-                <select class="form-control" name="order_type" id="order_type">
+                <select class="form-control mb-3" name="order_type" id="order_type">
                     <option disabled selected>Select Order Type</option>
                     <option value="dig_order">Digitizing Order</option>
                     <option value="vector_order">Vector Order</option>
                     <option value="patches_order">Patches Order</option>
                     <option value="logo_order">Logo Order</option>
+                    <option value="other">Other</option>
                 </select>
+
+                <input type="text" name="ord_type" class="form-control" id="ord_type" style="display: none" placeholder="Enter Order Type" />
             </div>
             <div class="modal-footer">
                 <button type="button" id="order_procceed" class="btn" style="background-color: #29babf; color: white">Proceed to Order</button>

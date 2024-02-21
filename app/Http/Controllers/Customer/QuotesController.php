@@ -47,14 +47,23 @@ class QuotesController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->except(['_token', 'order_img']);
+        $postData = $request->except(['_token', 'order_img', 'ord_type']);
 
         try{
             $postData['customer_id'] = auth()->user()->id;
-            if($request->has('order_img') && !empty($request->order_img)){
-                $postData['image'] = storeImage($request, 'order_img');
+            if($request->hasFile('order_img')){
+                if(is_array($request->order_img)){
+                    foreach ($request->order_img as $key=>$img){
+                        $fileName[] = storeImage($request->order_img, $key);
+                    }
+                    $postData['image'] = json_encode($fileName);
+                }else{
+                    $postData['image'] = storeImage($request, 'order_img');
+                }
             }
 
+            $postData['order_type'] = $postData['quote_type'];
+            $postData['format'] = json_encode($postData['format']);
             $order = Quote::create($postData);
 
             if($order){
@@ -76,7 +85,7 @@ class QuotesController extends Controller
      */
     public function show($id)
     {
-        $order = Quote::with('customer')->find($id);
+        $order = Quote::with('customer', 'customer.placements')->find($id);
 
         return view('portal.customer.quotes.quote-details', compact('order'));
     }
@@ -90,6 +99,7 @@ class QuotesController extends Controller
     public function edit($id)
     {
         $order = Quote::where('id', $id)->first();
+        $order['format'] = json_decode($order['format']);
         return view('portal.customer.quotes.edit-quote', compact('order'));
     }
 
@@ -103,10 +113,19 @@ class QuotesController extends Controller
     public function update(Request $request, $id)
     {
         try{
-            $postData = $request->except(['_token', '_method', '_token']);
-            if($request->has('order_img') && !empty($request->order_img)){
-                $postData['image'] = storeImage($request, 'order_img');
+            $postData = $request->except(['_token', '_method', 'order_img']);
+            if($request->hasFile('order_img')){
+                if(is_array($request->order_img)){
+                    foreach ($request->order_img as $key=>$img){
+                        $fileName[] = storeImage($request->order_img, $key);
+                    }
+                    $postData['image'] = json_encode($fileName);
+                }else{
+                    $postData['image'] = storeImage($request, 'order_img');
+                }
             }
+
+            $postData['format'] = json_encode($postData['format']);
             $order = Quote::where('id', $id)->update($postData);
 
             if($order == '1'){

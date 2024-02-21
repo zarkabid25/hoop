@@ -44,12 +44,12 @@
                     <div class="inner">
                         <h3>0</h3>
 
-                        <p>Total Orders</p>
+                        <p>Total Revisions</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-person-add"></i>
                     </div>
-                    <span class="small-box-footer">Lifetime</span>
+                    <span class="small-box-footer">This Month</span>
 {{--                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>--}}
                 </div>
             </div>
@@ -58,14 +58,14 @@
                 <!-- small box -->
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3>{{ $allOrders }}</h3>
+                        <h3>0</h3>
 
-                        <p>Total Paid</p>
+                        <p>Total Conversion</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-pie-graph"></i>
                     </div>
-                    <span class="small-box-footer">Lifetime</span>
+                    <span class="small-box-footer">This Month</span>
 {{--                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>--}}
                 </div>
             </div>
@@ -169,63 +169,63 @@
             <!-- right col (We are only adding the ID to make the widgets sortable)-->
             <section class="col-lg-5 connectedSortable">
                 <!-- Map card -->
-                <div>
-                    <div class="row">
-                        <div class="col-lg-12 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-primary">
-                                <div class="inner">
-                                    <h3>0</h3>
+{{--                <div>--}}
+{{--                    <div class="row">--}}
+{{--                        <div class="col-lg-12 col-6">--}}
+{{--                            <!-- small box -->--}}
+{{--                            <div class="small-box bg-primary">--}}
+{{--                                <div class="inner">--}}
+{{--                                    <h3>0</h3>--}}
 
-                                    <p>Total Revisions</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-bag"></i>
-                                </div>
-                                <span class="small-box-footer">This Month</span>
-                                {{--                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>--}}
-                            </div>
-                        </div>
-                        <!-- ./col -->
-                        <div class="col-lg-12 col-6">
-                            <!-- small box -->
-                            <div class="small-box" style="background: #303641; color: white">
-                                <div class="inner">
-                                    <h3>0</h3>
+{{--                                    <p>Total Revisions</p>--}}
+{{--                                </div>--}}
+{{--                                <div class="icon">--}}
+{{--                                    <i class="ion ion-bag"></i>--}}
+{{--                                </div>--}}
+{{--                                <span class="small-box-footer">This Month</span>--}}
+{{--                                --}}{{--                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <!-- ./col -->--}}
+{{--                        <div class="col-lg-12 col-6">--}}
+{{--                            <!-- small box -->--}}
+{{--                            <div class="small-box" style="background: #303641; color: white">--}}
+{{--                                <div class="inner">--}}
+{{--                                    <h3>0</h3>--}}
 
-                                    <p>Total Conversion</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-stats-bars"></i>
-                                </div>
-                                <span class="small-box-footer">This Month</span>
-                                {{--                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>--}}
-                            </div>
-                        </div>
-                        <!-- ./col -->
-                    </div>
-                    <!-- /.card-body-->
-                    <div class="card-footer bg-transparent" style="display: none">
-                        <div class="row">
-                            <div class="col-4 text-center">
-                                <div id="sparkline-1"></div>
+{{--                                    <p>Total Conversion</p>--}}
+{{--                                </div>--}}
+{{--                                <div class="icon">--}}
+{{--                                    <i class="ion ion-stats-bars"></i>--}}
+{{--                                </div>--}}
+{{--                                <span class="small-box-footer">This Month</span>--}}
+{{--                                --}}{{--                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <!-- ./col -->--}}
+{{--                    </div>--}}
+{{--                    <!-- /.card-body-->--}}
+{{--                    <div class="card-footer bg-transparent" style="display: none">--}}
+{{--                        <div class="row">--}}
+{{--                            <div class="col-4 text-center">--}}
+{{--                                <div id="sparkline-1"></div>--}}
 {{--                                <div class="text-white">Visitors</div>--}}
-                            </div>
-                            <!-- ./col -->
-                            <div class="col-4 text-center">
-                                <div id="sparkline-2"></div>
+{{--                            </div>--}}
+{{--                            <!-- ./col -->--}}
+{{--                            <div class="col-4 text-center">--}}
+{{--                                <div id="sparkline-2"></div>--}}
 {{--                                <div class="text-white">Online</div>--}}
-                            </div>
-                            <!-- ./col -->
-                            <div class="col-4 text-center">
-                                <div id="sparkline-3"></div>
+{{--                            </div>--}}
+{{--                            <!-- ./col -->--}}
+{{--                            <div class="col-4 text-center">--}}
+{{--                                <div id="sparkline-3"></div>--}}
 {{--                                <div class="text-white">Sales</div>--}}
-                            </div>
-                            <!-- ./col -->
-                        </div>
-                        <!-- /.row -->
-                    </div>
-                </div>
+{{--                            </div>--}}
+{{--                            <!-- ./col -->--}}
+{{--                        </div>--}}
+{{--                        <!-- /.row -->--}}
+{{--                    </div>--}}
+{{--                </div>--}}
                 <!-- /.card -->
 
                 <!-- solid sales graph -->
@@ -287,12 +287,129 @@
             <!-- right col -->
         </div>
         <!-- /.row (main row) -->
+
+        <div class="card mt-3">
+            <div class="card-header text-center">
+                <h6>My Orders</h6>
+            </div>
+            <div class="card-body">
+                <table id="example" class="table table-striped" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>Sr.#</th>
+                        <th>Order ID</th>
+                        <th>Design Name</th>
+                        <th>Design Type</th>
+                        <th>CRO</th>
+                        <th>Order Status</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @php $count = 1; @endphp
+
+                    {{--                    @if(auth()->user()->role !== 'developer')--}}
+                    @forelse($orders as $order)
+                        @php
+                            if(!empty($order->customer->referred)){
+                                $referred = \App\Models\User::where('email', $order->customer->referred)->first('name');
+                            }
+                            else{
+                                $referred = '';
+                            }
+                        @endphp
+                        <tr>
+                            <td>{{ $count++ }}</td>
+                            <td>{{ $order->id }}</td>
+                            <td>{{ ucwords($order->design_name) }}</td>
+                            <td>{{ ucwords($order->order_type) }}</td>
+                            @if(auth()->user()->role == 'customer')
+                                <td>{{ !empty($referred) ? ucwords($referred->name) : '--' }}</td>
+                            @else
+                                <td>{{ ucwords($order->customer->name) }}</td>
+                            @endif
+                            <td>
+                                @if($order->order_status == '0')
+                                    <span class="badge badge-info">Pending</span>
+                                @elseif ($order->order_status == '1')
+                                    <span class="badge badge-success">Approved</span>
+                                @else
+                                    <span class="badge badge-danger">Cancelled</span>
+                                @endif
+                            </td>
+                            <td>
+                                <div>
+                                    <div style="display: inline-block">
+                                        <a href="{{ route('order.show', ['order' => $order->id]) }}" class="btn" style="color: white; background-color: #17a2b8">Details</a>
+                                    </div>
+
+                                    @if(auth()->user()->role == 'customer')
+                                        <div style="display: inline-block">
+                                            {{--                                        <a href="javascript:void(0);" class="btn btn-info" onclick="editCat({{ $order->id }});">Edit</a>--}}
+                                            <a href="{{ route('order.edit', ['order' => $order->id]) }}" class="btn btn-info">Edit</a>
+                                        </div>
+
+                                        <div style="display: inline-block">
+                                            <form action="{{ route('order.destroy', ['order' => $order->id]) }}" method="post" class="delete_form">
+                                                @method('delete')
+                                                @csrf
+
+                                                <button type="button" class="btn btn-danger delete_btn">Delete</button>
+                                            </form>
+                                        </div>
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                    @endforelse
+                    {{--                    @else--}}
+                    {{--                        @forelse($orders as $order)--}}
+                    {{--                            <tr>--}}
+                    {{--                                <td>{{ $count++ }}</td>--}}
+                    {{--                                <td>{{ ucwords($order->order->design_name) }}</td>--}}
+                    {{--                                <td>{{ $order->order->urgent }}</td>--}}
+                    {{--                                <td>{{ $order->order->price }}</td>--}}
+                    {{--                                <td>{{ (strlen($order->order->special_instruct) <= 20) ? $order->order->special_instruct : $order->order->special_instruct."..."}}</td>--}}
+                    {{--                                <td>--}}
+                    {{--                                    <div>--}}
+                    {{--                                        <div style="display: inline-block">--}}
+                    {{--                                            <a href="{{ route('order.show', ['order' => $order->order->id]) }}" class="btn" style="color: white; background-color: #17a2b8">Details</a>--}}
+                    {{--                                        </div>--}}
+
+                    {{--                                        @if(auth()->user()->role == 'customer')--}}
+                    {{--                                            <div style="display: inline-block">--}}
+                    {{--                                                --}}{{--                                        <a href="javascript:void(0);" class="btn btn-info" onclick="editCat({{ $order->id }});">Edit</a>--}}
+                    {{--                                                <a href="{{ route('order.edit', ['order' => $order->order->id]) }}" class="btn btn-info">Edit</a>--}}
+                    {{--                                            </div>--}}
+
+                    {{--                                            <div style="display: inline-block">--}}
+                    {{--                                                <form action="{{ route('order.destroy', ['order' => $order->order->id]) }}" method="post" class="delete_form">--}}
+                    {{--                                                    @method('delete')--}}
+                    {{--                                                    @csrf--}}
+
+                    {{--                                                    <button type="button" class="btn btn-danger delete_btn">Delete</button>--}}
+                    {{--                                                </form>--}}
+                    {{--                                            </div>--}}
+                    {{--                                        @endif--}}
+                    {{--                                    </div>--}}
+                    {{--                                </td>--}}
+                    {{--                            </tr>--}}
+                    {{--                        @empty--}}
+                    {{--                        @endforelse--}}
+                    {{--                    @endif--}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 @endsection
 
 @section('JS')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        new DataTable('#example')
+
         $('#graph_type').on('change', function (){
             var order_stats = $(this).val();
             if(order_stats == 'order_stats'){
@@ -350,5 +467,6 @@
             data: data,
             options: options
         });
+
     </script>
 @endsection

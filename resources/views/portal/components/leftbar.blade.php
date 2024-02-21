@@ -104,7 +104,9 @@
                         @endif
                     </ul>
                 </li>
+            @endif
 
+            @if(auth()->user()->role == 'customer' || auth()->user()->role == 'sales')
                 <li class="nav-item {{ (request()->routeIs('invoices')) ? 'menu-is-opening menu-open' : '' }}">
                     <a href="javascript:void(0)" class="nav-link {{ request()->routeIs('invoices') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-file-alt" style="color: violet"></i>
@@ -202,9 +204,9 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="{{ route('company-details-create') }}" class="nav-link {{ request()->routeIs('company-details-create') ? 'active' : '' }}">
+                            <a href="{{ route('company-details') }}" class="nav-link {{ request()->routeIs('company-details') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Edit Details</p>
+                                <p>View Details</p>
                             </a>
                         </li>
                     </ul>

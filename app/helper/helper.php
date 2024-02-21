@@ -4,16 +4,16 @@ use Illuminate\Support\Facades\Storage;
 
 if( !function_exists( 'storeImage' ) ) {
     function storeImage($request, $key){
-        $image = $request->file($key);
+        if(is_numeric($key)){
+            $image = $request[$key];
+        }else{
+            $image = $request->file($key);
+        }
+
         $fileName = $image->hashName();
         $image->move(public_path('images/'), $fileName);
 
         return $fileName;
-//        $ImagePath = 'images/'. $image->hashName();
-//
-//        Storage::disk('public')->put($ImagePath, file_get_contents($image));
-//
-//        return $image->hashName();
     }
 }
 

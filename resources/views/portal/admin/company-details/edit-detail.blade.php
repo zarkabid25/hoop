@@ -11,22 +11,22 @@
 
         <div class="card">
             <div class="card-header">
-                <h6>Add Details</h6>
+                <h6>Edit Details</h6>
             </div>
             <div class="card-body">
-                <form action="{{ route('company-details.store') }}" method="post">
+                <form action="{{ route('company-details.update', ['id' => $record->id]) }}" method="post">
                     @csrf
-
+                
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <input type="text" class="form-control" name="field_title[]"  placeholder="Field Title" required/>
+                                <input type="text" class="form-control" value="{{ $record->field_title }}" name="field_title"  required/>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <input type="text" class="form-control" name="field_value[]"  placeholder="Field Value" required/>
+                                <input type="text" class="form-control" value="{{ $record->field_value }}" name="field_value"  placeholder="Field Value" required/>
                             </div>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                     <div class="row" id="child_fields"></div>
 
                     <div class="">
-                        <button type="submit" style="background-color: #29babf; color: white" class="btn btn-primary">Save</button>
+                        <button type="submit" style="background-color: #29babf; color: white" class="btn btn-primary">Update</button>
                     </div>
                 </form>
             </div>

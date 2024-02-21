@@ -8,6 +8,42 @@
                 <h4>Profile Information</h4>
             </div>
             <div class="card-body p-5 shadow">
+                @if(auth()->user()->role == 'customer')
+                    <div class="row">
+                        <div class="col-lg-2 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3>{{ $totalPrice }}</h3>
+
+                                    <p>Total Paid</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="ion ion-bag"></i>
+                                </div>
+                                <span class="small-box-footer"></span>
+                                {{--                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>--}}
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-2 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3>{{ $allOrdersCount }}</h3>
+
+                                    <p>Total Orders</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="ion ion-stats-bars"></i>
+                                </div>
+                                <span class="small-box-footer"></span>
+                                {{--                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>--}}
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <form action="{{ route('profile.update', ['id' => $user->id]) }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="row mb-3" style="justify-content: center">
@@ -43,7 +79,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="name">Customer Name</label>
-                                        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="name" value="{{ $user->name }}" required autocomplete />
+                                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" value="{{ $user->name }}" required autocomplete @if(auth()->user()->role == 'customer') style="pointer-events: none" @endif />
 
                                         @error('name')
                                         <span class="invalid-feedback" role="alert">
@@ -56,7 +92,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="company_name">Company Name</label>
-                                        <input type="text" name="company_name" class="form-control @error('company_name') is-invalid @enderror" id="company_name" value="{{ $user->company_name }}" required autocomplete />
+                                        <input type="text" class="form-control @error('company_name') is-invalid @enderror" id="company_name" value="{{ $user->company_name }}" required autocomplete @if(auth()->user()->role == 'customer') style="pointer-events: none" @endif />
 
                                         @error('company_name')
                                         <span class="invalid-feedback" role="alert">
@@ -71,7 +107,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="company_type">Company Type</label>
-                                        <input type="text" name="company_type" class="form-control @error('company_type') is-invalid @enderror" id="company_type" value="{{ $user->company_type }}" required autocomplete />
+                                        <input type="text" class="form-control @error('company_type') is-invalid @enderror" id="company_type" value="{{ $user->company_type }}" required autocomplete @if(auth()->user()->role == 'customer') style="pointer-events: none" @endif />
 
                                         @error('company_type')
                                         <span class="invalid-feedback" role="alert">
@@ -83,8 +119,8 @@
 
                                 <div class="col-md-4">
                                     <div class="form-group mb-3">
-                                        <label for="referred">Referred By</label>
-                                        <input type="text" name="referred" class="form-control @error('referred') is-invalid @enderror" required value="{{ (!empty($user->referred) ? $user->referred : '') }}" id="referred" autocomplete />
+                                        <label for="referred">CRO</label>
+                                        <input type="text" class="form-control @error('referred') is-invalid @enderror" required value="{{ (!empty($user->referred) ? $user->referred : '') }}" id="referred" autocomplete @if(auth()->user()->role == 'customer') style="pointer-events: none" @endif />
 
                                         @error('referred')
                                         <span class="invalid-feedback" role="alert">
@@ -96,28 +132,28 @@
                             </div>
                         @endif
 
-                            @if(auth()->user()->role == 'admin')
-                                <div class="row" style="justify-content: center">
-                                    <div class="col-md-4">
-                                        <div class="form-group mb-3">
-                                            <label for="referred">Referred By</label>
-                                            <input type="text" name="referred" class="form-control @error('referred') is-invalid @enderror" required value="{{ (!empty($user->referred) ? $user->referred : '') }}" id="referred" autocomplete />
+                        @if(auth()->user()->role == 'admin')
+                            <div class="row" style="justify-content: center">
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label for="referred">Referred By</label>
+                                        <input type="text" name="referred" class="form-control @error('referred') is-invalid @enderror" required value="{{ (!empty($user->referred) ? $user->referred : '') }}" id="referred" autocomplete />
 
-                                            @error('referred')
-                                            <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                            @enderror
-                                        </div>
+                                        @error('referred')
+                                        <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                        @enderror
                                     </div>
                                 </div>
-                            @endif
+                            </div>
+                        @endif
 
                         <div  class="row" style="justify-content: center">
                             <div class="col-md-4">
                                 <div class="form-group mb-3">
                                     <label for="email">Email</label>
-                                    <input type="email" name="email" class="form-control" value="{{ $user->email }}" readonly id="email" />
+                                    <input type="email" class="form-control" value="{{ $user->email }}" readonly id="email" />
 
                                     @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -131,7 +167,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group mb-3">
                                         <label for="alternate_email">Alternate Email</label>
-                                        <input type="email" name="alternate_email" class="form-control" value="{{ $user->alternate_email }}" id="alternate_email" />
+                                        <input type="email" class="form-control" value="{{ $user->alternate_email }}" id="alternate_email" @if(auth()->user()->role == 'customer') style="pointer-events: none" @endif />
 
                                         @error('alternate_email')
                                         <span class="invalid-feedback" role="alert">
@@ -163,13 +199,12 @@
                             @endforelse
                         @endif
 
-
                         <div  class="row" style="justify-content: center">
-                            @if(auth()->user()->role !== 'sales')
+                            @if(auth()->user()->role !== 'sales' && auth()->user()->role !== 'customer')
                                 <div class="col-md-4">
                                     <div class="form-group mb-3">
                                         <label for="phone">Phone Number</label>
-                                        <input type="number" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ (!empty($user->phone) ? $user->phone : '') }}" id="phone" autocomplete />
+                                        <input type="number" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ (!empty($user->phone) ? $user->phone : '') }}" id="phone" autocomplete @if(auth()->user()->role == 'customer') style="pointer-events: none" @endif />
 
                                         @error('phone')
                                         <span class="invalid-feedback" role="alert">
@@ -183,8 +218,23 @@
                             @if(auth()->user()->role == 'customer')
                                 <div class="col-md-4">
                                     <div class="form-group mb-3">
+                                        <label for="phone">Phone Number</label>
+                                        <input type="number" class="form-control @error('phone') is-invalid @enderror" value="{{ (!empty($user->phone) ? $user->phone : '') }}" id="phone" autocomplete @if(auth()->user()->role == 'customer') style="pointer-events: none" @endif />
+
+                                        @error('phone')
+                                        <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if(auth()->user()->role == 'customer')
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
                                         <label for="alternate_phone">Alternate Phone Number</label>
-                                        <input type="number" name="alternate_phone" class="form-control @error('alternate_phone') is-invalid @enderror" value="{{ (!empty($user->alternate_phone) ? $user->alternate_phone : '') }}" id="alternate_phone" autocomplete />
+                                        <input type="number" class="form-control @error('alternate_phone') is-invalid @enderror" value="{{ (!empty($user->alternate_phone) ? $user->alternate_phone : '') }}" id="alternate_phone" autocomplete @if(auth()->user()->role == 'customer') style="pointer-events: none" @endif />
 
                                         @error('alternate_phone')
                                         <span class="invalid-feedback" role="alert">
@@ -201,24 +251,9 @@
                                 <div class="col-md-8">
                                     <div class="form-group mb-3">
                                         <label for="address">Address</label>
-                                        <input type="text" name="address" class="form-control @error('address') is-invalid @enderror" value="{{ (!empty($user->address) ? $user->address : '') }}" id="address" autocomplete />
+                                        <input type="text" class="form-control @error('address') is-invalid @enderror" value="{{ (!empty($user->address) ? $user->address : '') }}" id="address" autocomplete @if(auth()->user()->role == 'customer') style="pointer-events: none" @endif />
 
                                         @error('address')
-                                        <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row" style="justify-content: center">
-                                <div class="col-md-8">
-                                    <div class="form-group mb-3">
-                                        <label for="comment">Comment</label>
-                                        <textarea name="comment" class="form-control @error('comment') is-invalid @enderror" id="comment">{{ (!empty($user->comment) ? $user->comment : '') }}</textarea>
-
-                                        @error('comment')
                                         <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -243,6 +278,35 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-center">
+                <h6>Placement Prices</h6>
+            </div>
+
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @forelse($user->placements->toArray() as $key=>$value)
+                            @if($key !== 'id' && $key !== 'user_id' && $key !== 'created_at' && $key !== 'updated_at')
+                                <tr>
+                                    <td>{{ str_replace('_', ' ', $key) }}</td>
+                                    <td>{{ $value }}</td>
+                                </tr>
+                            @endif
+                        @empty
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

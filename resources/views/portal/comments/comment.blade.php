@@ -1,4 +1,4 @@
-{{--@if(!empty($order->assignOrder) && $order->assignOrder->developer_id == auth()->user()->id)--}}
+@if(auth()->user()->role == 'admin' || auth()->user()->role == 'developer')
     <div class="card">
         <div class="card-header bg-cyan">
             <h6>Comments</h6>
@@ -22,4 +22,4 @@
             @endif
         </div>
     </div>
-{{--@endif--}}
+@endif

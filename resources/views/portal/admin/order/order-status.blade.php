@@ -15,7 +15,7 @@
 
                 <div class="modal-body">
                     <label for="image">Add Image:</label>
-                    <input type="file" class="form-control" name="image" id="image" required />
+                    <input type="file" class="form-control" name="image[]" id="image" accept=".jpg,.pdf, .dst, .png" multiple required />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

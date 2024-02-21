@@ -11,6 +11,7 @@ class CompanyDetailController extends Controller
 {
     public function index(){
         $companyDetails = CompanyDetail::all();
+    
         return view('portal.admin.company-details.index', compact('companyDetails'));
     }
 
@@ -27,6 +28,7 @@ class CompanyDetailController extends Controller
         ]);
 
         $postData = $request->except('_token');
+        
         foreach ($postData['field_title'] as $key=>$val){
             $result = CompanyDetail::create([
                 'field_title' => $val,
@@ -43,6 +45,42 @@ class CompanyDetailController extends Controller
     }
 
     public function edit($id){
-        dd($id);
+        $record = CompanyDetail::where('id', $id)->first();
+
+        if($record){
+            return view('portal.admin.company-details.edit-detail', compact('record'));
+        }
+        else{
+            return redirect()->back()->with('error', 'Something went wrong.');
+        }
+    }
+
+    public function update(Request $request, $id){
+        $this->validate($request, [
+            'field_title' => 'required | string',
+            'field_value' => 'required | string',
+        ]);
+
+        $postData = $request->except('_token');
+
+        $result = CompanyDetail::where('id', $id)->update($postData);
+
+        if($result){
+            return redirect()->route('company-details')->with('success', 'Successfully updated.');
+        }
+        else{
+            return redirect()->back()->with('error', 'Something went wrong.');
+        }
+    }
+
+    public function delete($id){
+        $result = CompanyDetail::where('id', $id)->delete();
+
+        if($result == '1'){
+            return redirect()->route('company-details')->with('success', 'Successfully deleted.');
+        }
+        else{
+            return redirect()->back()->with('error', 'Something went wrong.');
+        }
     }
 }

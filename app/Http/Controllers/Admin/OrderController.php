@@ -9,6 +9,7 @@ use App\Models\Comment;
 use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderStatus;
+use App\Models\Quote;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Mockery\Matcher\Not;
@@ -64,13 +65,21 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->except(['_token', 'order_img']);
+        $postData = $request->except(['_token', 'order_img', 'ord_type']);
 
         try{
             $postData['customer_id'] = auth()->user()->id;
-            if($request->has('order_img') && !empty($request->order_img)){
-                $postData['image'] = storeImage($request, 'order_img');
+            if($request->hasFile('order_img')){
+                if(is_array($request->order_img)){
+                    foreach ($request->order_img as $key=>$img){
+                        $fileName[] = storeImage($request->order_img, $key);
+                    }
+                    $postData['image'] = json_encode($fileName);
+                }else{
+                    $postData['image'] = storeImage($request, 'order_img');
+                }
             }
+            $postData['format'] = json_encode($postData['format']);
 
             $order = Order::create($postData);
 
@@ -99,7 +108,7 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        $order = Order::with(['customer', 'assignOrder.developer', 'comments', 'orderStatus'])->find($id);
+        $order = Order::with(['customer', 'customer.placements', 'assignOrder.developer', 'comments', 'orderStatus'])->find($id);
         $assignedDeveloper = '';
 
         if (!empty($order->assignOrder) && !empty($order->assignOrder->developer)) {
@@ -118,7 +127,10 @@ class OrderController extends Controller
      */
     public function edit($id)
     {
+        set_time_limit(120);
+
         $order = Order::where('id', $id)->first();
+        $order['format'] = json_decode($order['format']);
 
         return view('portal.admin.order.edit-order', compact('order'));
     }
@@ -133,10 +145,20 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         try{
-            $postData = $request->except(['_token', '_method', '_token']);
-            if($request->has('order_img') && !empty($request->order_img)){
-                $postData['image'] = storeImage($request, 'order_img');
+            $postData = $request->except(['_token', '_method', 'order_img']);
+
+            if($request->hasFile('order_img')){
+                if(is_array($request->order_img)){
+                    foreach ($request->order_img as $key=>$img){
+                        $fileName[] = storeImage($request->order_img, $key);
+                    }
+                    $postData['image'] = json_encode($fileName);
+                }else{
+                    $postData['image'] = storeImage($request, 'order_img');
+                }
             }
+
+            $postData['format'] = json_encode($postData['format']);
             $order = Order::where('id', $id)->update($postData);
 
             if($order == '1'){
@@ -217,27 +239,35 @@ class OrderController extends Controller
 //        $postData['user_id'] = auth()->user()->id;
 
         if($request->hasFile('image')){
-            $fileName = storeImage($request, 'image');
-            $result = OrderStatus::updateOrCreate(
-                [
-                    'user_id' => auth()->user()->id,
-                ],
-                [
-                    'order_id' => $request->order_id,
-                    'image' => $fileName,
-                ]
-            );
+            if(is_array($request->image)){
+                foreach ($request->image as $key=>$img){
+                    $fileName[] = storeImage($request->image, $key);
+                }
+                $result = OrderStatus::updateOrCreate(
+                    [
+                        'user_id' => auth()->user()->id,
+                    ],
+                    [
+                        'order_id' => $request->order_id,
+                        'image' => json_encode($fileName),
+                    ]
+                );
+//                $postData['image'] = json_encode($fileName);
+            }else{
+                if($request->hasFile('image')){
+                    $fileName = storeImage($request, 'image');
+                    $result = OrderStatus::updateOrCreate(
+                        [
+                            'user_id' => auth()->user()->id,
+                        ],
+                        [
+                            'order_id' => $request->order_id,
+                            'image' => $fileName,
+                        ]
+                    );
+                }
+            }
         }
-//        else{
-//            $result = OrderStatus::updateOrCreate(
-//                [
-//                    'user_id' => auth()->user()->id,
-//                ],
-//                [
-//                    'order_id' => $request->order_id,
-//                ]
-//            );
-//        }
 
         if($result){
             return redirect()->back()->with('success', 'Order status updated successfully.');
@@ -245,5 +275,33 @@ class OrderController extends Controller
         else{
             return redirect()->back()->with('error', 'Something went wrong.');
         }
+    }
+
+    public function filterOrder(Request $request){
+        $orderType = $request->input('order_type');
+        $orderStatus = $request->input('order_status');
+        $requestType = ($request->has('request_type')) ? $request->request_type : 'order';
+
+        if($request->has('request_type')){
+            $query = Quote::query();
+        }
+        else{
+            $query = Order::query();
+        }
+
+        if ($orderType) {
+            $query->where('order_type', 'like', '%' . $orderType . '%');
+        }
+
+        if ($orderStatus !== null && $orderStatus !== 'Select') {
+            $query->orWhere('order_status', $orderStatus);
+        }
+
+        $query->with('customer');
+
+        $orders = $query->get();
+        $html = view('portal.filter.filtered-order', compact('orders', 'requestType'))->render();
+
+        return response()->json(['success' => true, 'message' => 'Filter applied successfully', 'data' => $html]);
     }
 }

@@ -14,10 +14,10 @@
                 @endif
             @endif
 
-            @if($order->assignOrder && $order->assignOrder->developer_id == auth()->user()->id || auth()->user()->role == 'admin')
+            @if(!empty($order->assignOrder) && $order->assignOrder->developer_id == auth()->user()->id || auth()->user()->role == 'admin')
                 <div class="text-right mb-3" style="display: inline-flex">
                     <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal1"
-                            style="background-color: #17a2b8; color: white">Order Status
+                            style="background-color: #17a2b8; color: white">Update Current Product Status
                     </button>
                 </div>
             @endif
@@ -55,7 +55,15 @@
 
                                 <tr>
                                     <th>Format:</th>
-                                    <td>{{ $order->format ?? '--' }}</td>
+                                    @php
+                                        $formats = json_decode($order->format);
+                                    @endphp
+                                    <td>
+                                        @forelse($formats as $format)
+                                            <span class="badge badge-secondary">{{ $format }}</span>
+                                        @empty
+                                        @endforelse
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -106,7 +114,11 @@
 
                         <div class="card-body">
                             @php
-                                $img = $order->image ?? 'No-Image.png';
+                                $img = json_decode($order->image);
+
+                                if ($img == null) {
+                                    $img = $order->image ?? 'no-file.png';
+                                }
                             @endphp
 
                             <table>
@@ -143,15 +155,26 @@
                                     @endif
                                 </tr>
 
-                                <tr>
-                                    <th>Urgent:</th>
-                                    <td>{{ $order->urgent ?? '--' }}</td>
-                                </tr>
+{{--                                <tr>--}}
+{{--                                    <th>Urgent:</th>--}}
+{{--                                    <td>{{ $order->urgent ?? '--' }}</td>--}}
+{{--                                </tr>--}}
 
-                                <tr>
-                                    <th>Price:</th>
-                                    <td>{{ $order->price ?? '--' }}</td>
-                                </tr>
+                                @if(auth()->user()->role == 'admin' || auth()->user()->role == 'customer')
+                                    @php
+                                        $placements = $order->customer->placements->toArray();
+                                        if(array_key_exists($order->placement, $placements)){
+                                            $matchingValue = $placements[$order->placement];
+                                        }
+                                        else{
+                                            $matchingValue = '--';
+                                        }
+                                    @endphp
+                                    <tr>
+                                        <th>Price:</th>
+                                        <td>{{ $matchingValue }}</td>
+                                    </tr>
+                                @endif
 
                                 <tr>
                                     <th>Shipping Cost:</th>
@@ -175,20 +198,44 @@
                                 </tr>
 
                                 <tr>
-                                    <th>Image File:</th>
+                                    <th>File:</th>
                                     <td>
-                                        <img src="{{ asset('images'. "/". $img) }}" alt="No Image" width="60"/>
+                                        @if(is_array($img))
+                                            @foreach($img as $val)
+                                                <a href="{{ route('image.download', ['filename' => $val]) }}">{{ $val }}</a>
+{{--                                                <a href="{{ asset('images'. "/". $val) }}">{{ $val }}</a><br />--}}
+                                            @endforeach
+                                        @else
+                                            <a href="{{ route('image.download', ['filename' => $img]) }}">{{ $img }}</a>
+{{--                                            <a href="{{ asset('images'. "/". $img) }}">{{ $img }}<a>--}}
+{{--                                            <img src="{{ asset('images'. "/". $img) }}" alt="No Image" width="60"/>--}}
+                                        @endif
                                     </td>
                                 </tr>
 
                                 @if(auth()->user()->role == 'customer')
                                     @forelse($order->orderStatus as $orderStatusImg)
-                                        @php $orderStatusFile = ($orderStatusImg->image) ? $orderStatusImg->image : 'No-Image.png'; @endphp
+                                        @php
+                                            $orderStatusimage = json_decode($orderStatusImg->image);
+
+                                            if ($orderStatusimage == null) {
+                                                $orderStatusimage = $orderStatusImg->imag ?? 'no-file.png';
+                                            }
+//                                                $orderStatusimage = ($orderStatusImg->image) ? $orderStatusImg->image : 'no-file.png';
+                                        @endphp
+
                                         @if($orderStatusImg->user_id == '1')
                                             <tr>
                                                 <th>Current Order Status:</th>
                                                 <td>
-                                                    <img src="{{ asset('images'. "/". $orderStatusFile) }}" alt="No Image" width="60"/>
+                                                    @if(is_array($orderStatusimage))
+                                                        @foreach($orderStatusimage as $val)
+                                                            <a href="{{ route('image.download', ['filename' => $val]) }}">{{ $val }}</a>
+                                                        @endforeach
+                                                    @else
+                                                        <a href="{{ route('image.download', ['filename' => $orderStatusimage]) }}">{{ $orderStatusimage }}</a>
+                                                    @endif
+{{--                                                    <img src="{{ asset('images'. "/". $orderStatusFile) }}" alt="No File" width="60"/>--}}
                                                 </td>
                                             </tr>
                                         @else
@@ -199,12 +246,28 @@
 
                                 @if(auth()->user()->role == 'developer' || auth()->user()->role == 'admin')
                                     @forelse($order->orderStatus as $orderStatus)
-                                        @php $orderStatusFile = ($orderStatus->image) ? $orderStatus->image : 'No-Image.png'; @endphp
+                                        @php
+                                            $orderStatusimage = json_decode($orderStatus->image);
+
+                                            if ($orderStatusimage == null) {
+                                                $orderStatusimage = $orderStatusImg->imag ?? 'no-file.png';
+                                            }
+//                                                $orderStatusFile = ($orderStatus->image) ? $orderStatus->image : 'No-Image.png';
+                                        @endphp
+
                                         @if($orderStatus->user_id == auth()->user()->id)
                                             <tr>
                                                 <th>Current Order Status:</th>
                                                 <td>
-                                                    <img src="{{ asset('images'. "/". $orderStatusFile) }}" alt="No Image" width="60"/>
+                                                    @if(is_array($orderStatusimage))
+                                                        @foreach($orderStatusimage as $val)
+                                                            <a href="{{ route('image.download', ['filename' => $val]) }}">{{ $val }}</a>
+                                                        @endforeach
+                                                    @else
+                                                        <a href="{{ route('image.download', ['filename' => $orderStatusimage]) }}">{{ $orderStatusimage }}</a>
+                                                    @endif
+{{--                                                    <img src="{{ asset('images'. "/". $orderStatusFile) }}" alt="No Image" width="60"/>--}}
+{{--                                                    <a href="{{ route('image.download', ['filename' => $orderStatusFile]) }}">{{ $orderStatusFile }}</a>--}}
                                                 </td>
                                             </tr>
                                         @else

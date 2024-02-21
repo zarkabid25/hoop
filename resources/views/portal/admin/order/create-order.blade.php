@@ -32,6 +32,10 @@
             background-color: #29babf;
             color: white;
         }
+
+        .select2-container .select2-selection--single{
+            height: 37px !important;
+        }
     </style>
 @endsection
 
@@ -46,7 +50,7 @@
                         <h5>Digitizing Order</h5>
                     </div>
 
-                    <input type="hidden" name="order_type" value="digitizing" />
+                    <input type="hidden" name="order_type" id="type" value="digitizing" />
                     <div class="card-body">
                         <div class="digi_order">
                             <div class="card shadow">
@@ -66,7 +70,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="fabric">Select Fabric</label>
-                                                <select class="form-control" name="fabric" required id="fabric">
+                                                <select class="form-control js-example-tags" name="fabric" required id="fabric">
                                                     <option selected disabled>Select Fabric</option>
                                                     <option value="Apron">Apron</option>
                                                     <option value="Blanket">Blanket</option>
@@ -89,6 +93,7 @@
                                                     <option value="polar_fleece">polar fleece</option>
                                                     <option value="Mesh_knit">Mesh knit</option>
                                                     <option value="Beanie">Beanie</option>
+                                                    <option value="Hoodie">Hoodie</option>
                                                     <option value="Stretchy_polyester_light_Knit_Fabric">Stretchy polyester / light Knit Fabric</option>
                                                     <option value="Other">Other</option>
                                                 </select>
@@ -102,20 +107,20 @@
                                                 <label for="placement">Select Placement</label>
                                                 <select class="form-control" name="placement" required id="placement">
                                                     <option selected disabled>Select Placement</option>
-                                                    <option value="Bags">Bags</option>
-                                                    <option value="Cap">Cap</option>
-                                                    <option value="Chest">Chest</option>
-                                                    <option value="Gloves">Gloves</option>
-                                                    <option value="Cap Side">Cap Side</option>
-                                                    <option value="Cap Back">Cap Back</option>
-                                                    <option value="Towel">Towel</option>
-                                                    <option value="JacketBack">JacketBack</option>
-                                                    <option value="Sleeve">Sleeve</option>
-                                                    <option value="Patches">Patches</option>
-                                                    <option value="Visor ">Visor </option>
-                                                    <option value="Table Cloth">Table Cloth</option>
-                                                    <option value="Beanie Caps">Beanie Caps</option>
-                                                    <option value="Apron">Apron</option>
+                                                    <option value="bags">Bags</option>
+                                                    <option value="cap">Cap</option>
+                                                    <option value="chest">Chest</option>
+                                                    <option value="gloves">Gloves</option>
+                                                    <option value="cap Side">Cap Side</option>
+                                                    <option value="cap Back">Cap Back</option>
+                                                    <option value="towel">Towel</option>
+                                                    <option value="jacketback">JacketBack</option>
+                                                    <option value="sleeve">Sleeve</option>
+                                                    <option value="patches">Patches</option>
+                                                    <option value="visor ">Visor </option>
+                                                    <option value="table_cloth">Table Cloth</option>
+                                                    <option value="beanie_caps">Beanie Caps</option>
+                                                    <option value="apron">Apron</option>
                                                     <option value="other">other</option>
                                                 </select>
                                             </div>
@@ -124,8 +129,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="format">Select Format</label>
-                                                <select class="form-control" name="format" required id="format">
-                                                    <option selected disabled>Other</option>
+                                                <select class="form-control js-example-tags" name="format[]" required id="format" multiple="multiple">
+                                                    <option>Other</option>
                                                     <option value="100">100</option>
                                                     <option value="cdr">cdr</option>
                                                     <option value="cnd">cnd</option>
@@ -178,7 +183,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="width">Width</label>
-                                                <input type="text" class="form-control" name="width" placeholder="Width" required id="width" />
+                                                <input type="text" class="form-control" name="width" placeholder="Width" id="width" />
                                             </div>
                                         </div>
                                     </div>
@@ -196,35 +201,23 @@
                                             <div class="form-group">
                                                 <label for="">Upload File</label>
                                                 <div>
-                                                    <input type="file" name="order_img" id="upload" onchange="selectImage(this);" hidden/>
+                                                    <input type="file" name="order_img[]" id="upload" onchange="selectImage(this);" accept=".jpg, .pdf, .dst, .png" multiple hidden/>
                                                     <label class="choose_file" for="upload">+ Choose file</label>
                                                     <p class="file-name"></p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="unloading_status">Urgent</label>
-
-                                                <div>
-                                                    <input type="radio" id="yes" name="urgent" value="yes" checked />
-                                                    <label class="tab" for="yes">Yes</label>
-
-                                                    <input type="radio" id="no" name="urgent" value="no" />
-                                                    <label class="tab" for="no">No</label>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="price">Price</label>
-                                                <input type="number" class="form-control" name="price" placeholder="Price" required id="price" />
+                                        @if(auth()->user()->role == 'admin')
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="price">Price</label>
+                                                    <input type="number" class="form-control" name="price" placeholder="Price" id="price" />
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endif
                                     </div>
 
                                     <div class="row">
@@ -259,20 +252,27 @@
 
 @section('JS')
     <script>
-        $(document).ready(function (){
-           $('#exampleModal').modal('show');
+        $('#order_type').on('change', function (){
+            let type = $(this).val();
+            if(type === 'other'){
+                $('#ord_type').show();
+            }
+            else{
+                $('#ord_type').hide();
+            }
         });
 
-        function selectImage(pointer){
-            var file = $(pointer)[0].files[0].name;
-            $('.file-name').text(file);
-        }
-
         $('#order_procceed').on('click', function (){
-           let type = $('#order_type').val();
+            let type = $('#order_type').val();
 
-           if(type === 'vector_order'){
-               $('.append_form').replaceWith(`
+            if(type === 'other'){
+                let name = $('#ord_type').val();
+                $('#type').val(type);
+                $('.card-header h5').text(name).css('text-transform', 'capitalize');
+            }
+
+            if(type === 'vector_order'){
+                $('.append_form').replaceWith(`
                     <div class="card vector_ordr">
                 <div class="card-header">
                     <h4>Vector Order</h4>
@@ -327,8 +327,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="format">Select Format</label>
-                                            <select class="form-control" name="format" required id="format">
-                                                <option selected disabled>Other</option>
+                                            <select class="form-control js-example-tags" name="format[]" required id="format" multiple="multiple">
+                                                <option>Other</option>
                                                 <option value="ai">ai</option>
                                                 <option value="cdr">cdr</option>
                                                 <option value="eps">eps</option>
@@ -350,36 +350,24 @@
                                         <div class="form-group">
                                             <label for="">Upload File</label>
                                             <div>
-                                                <input type="file" name="order_img" id="upload" onchange="selectImage(this);" hidden/>
+                                                <input type="file" name="order_img[]" id="upload" onchange="selectImage(this);" multiple accept=".ai,.eps, .pdf, .jpg, .png" hidden/>
                                                 <label class="choose_file" for="upload">+ Choose file</label>
                                                 <p class="file-name"></p
                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="unloading_status">Urgent</label>
-
-                                            <div>
-                                                <input type="radio" id="yes" name="urgent" value="yes" checked />
-                                                <label class="tab" for="yes">Yes</label>
-
-                                                <input type="radio" id="no" name="urgent" value="no" />
-                                                <label class="tab" for="no">No</label>
+                                @if(auth()->user()->role == 'admin')
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="price">Price</label>
+                                                <input type="text" class="form-control" name="price" placeholder="Price" id="price" />
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="price">Price</label>
-                                            <input type="text" class="form-control" name="price" required placeholder="Price" id="price" />
-                                        </div>
-                                    </div>
-                                </div>
+                                @endif
 
                                 <div class="row">
                                     <div class="col-md-12">
@@ -395,10 +383,15 @@
                 </div>
             </div>
                `);
-           }
 
-           if(type === 'patches_order'){
-               $('.append_form').replaceWith(`
+                $(".js-example-tags").select2({
+                    tags: true,
+                    tokenSeparators: [',', ' ']
+                });
+            }
+
+            if(type === 'patches_order'){
+                $('.append_form').replaceWith(`
                     <div class="card patches_ordr">
                 <div class="card-header">
                     <h4>Patches Order</h4>
@@ -466,7 +459,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="width">Width</label>
-                                            <input type="text" class="form-control" name="width" placeholder="Width" required id="width">
+                                            <input type="text" class="form-control" name="width" placeholder="Width" id="width">
                                         </div>
                                     </div>
                                 </div>
@@ -484,35 +477,23 @@
                                         <div class="form-group">
                                             <label for="">Upload File</label>
                                             <div>
-                                                <input type="file" name="order_img" id="upload" onchange="selectImage(this);" hidden/>
+                                                <input type="file" name="order_img[]" id="upload" onchange="selectImage(this);" multiple hidden/>
                                                 <label class="choose_file" for="upload">+ Choose file</label>
                                                 <p class="file-name"></p
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="unloading_status">Urgent</label>
-
-                                            <div>
-                                                <input type="radio" id="yes" name="urgent" value="yes" checked />
-                                                <label class="tab" for="yes">Yes</label>
-
-                                                <input type="radio" id="no" name="urgent" value="no" />
-                                                <label class="tab" for="no">No</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="price">Price</label>
-                                            <input type="text" class="form-control" name="price" placeholder="Price" required id="price" />
+                                    @if(auth()->user()->role == 'admin')
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="price">Price</label>
+                                                <input type="text" class="form-control" name="price" placeholder="Price" id="price" />
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
 
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -545,9 +526,10 @@
                 </div>
             </div>
                `);
-           }
-           if(type === 'logo_order'){
-               $('.append_form').replaceWith(`
+            }
+
+            if(type === 'logo_order'){
+                $('.append_form').replaceWith(`
                     <div class="card logo_order">
                 <div class="card-header">
                     <h4>Logo Order</h4>
@@ -597,7 +579,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="width">Width</label>
-                                            <input type="text" class="form-control" name="width" placeholder="Width" required id="width">
+                                            <input type="text" class="form-control" name="width" placeholder="Width" id="width">
                                         </div>
                                     </div>
                                 </div>
@@ -615,35 +597,22 @@
                                         <div class="form-group">
                                             <label for="">Upload File</label>
                                             <div>
-                                                <input type="file" name="order_img" id="upload" onchange="selectImage(this);" hidden/>
+                                                <input type="file" name="order_img[]" id="upload" onchange="selectImage(this);" multiple hidden/>
                                                 <label class="choose_file" for="upload">+ Choose file</label>
                                                 <p class="file-name"></p
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="unloading_status">Urgent</label>
-
-                                            <div>
-                                                <input type="radio" id="yes" name="urgent" value="yes" checked />
-                                                <label class="tab" for="yes">Yes</label>
-
-                                                <input type="radio" id="no" name="urgent" value="no" />
-                                                <label class="tab" for="no">No</label>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="price">Price</label>
-                                            <input type="text" class="form-control" name="price" placeholder="Price" required id="price" />
+                                    @if(auth()->user()->role == 'admin')
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="price">Price</label>
+                                                <input type="text" class="form-control" name="price" placeholder="Price" id="price" />
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
 
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -676,9 +645,29 @@
                 </div>
             </div>
                `);
-           }
+            }
 
             $('#exampleModal').modal('toggle');
         });
+
+        $(document).ready(function (){
+            $(".js-example-tags").select2({
+                tags: true,
+                tokenSeparators: [',', ' ']
+            });
+
+           $('#exampleModal').modal('show');
+        });
+
+        function selectImage(input) {
+            var files = input.files;
+            var fileNames = [];
+
+            for (var i = 0; i < files.length; i++) {
+                fileNames.push(files[i].name);
+            }
+
+            $(".file-name").text(fileNames.join(', '));
+        }
     </script>
 @endsection

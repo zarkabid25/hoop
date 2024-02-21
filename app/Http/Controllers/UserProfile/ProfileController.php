@@ -4,6 +4,7 @@ namespace App\Http\Controllers\UserProfile;
 
 use App\Http\Controllers\Controller;
 use App\Models\CompanyDetail;
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -11,17 +12,24 @@ use Illuminate\Support\Facades\Hash;
 class ProfileController extends Controller
 {
     public function index(){
-        $user = User::where('id', auth()->user()->id)->first();
+        $user = User::with('placements')->where('id', auth()->user()->id)->first();
         $companyDetails = CompanyDetail::all();
 
+        if (auth()->user()->role == 'customer'){
+            $allOrders = Order::where('customer_id', auth()->user()->id)->get();
+            $totalPrice = $allOrders->sum('price');
+            $allOrdersCount = $allOrders->count();
+
+            return view('portal.profile.profile', compact('user', 'companyDetails', 'totalPrice', 'allOrdersCount'));
+        }
         return view('portal.profile.profile', compact('user', 'companyDetails'));
     }
 
     public function update(Request $request, $id){
-        $this->validate($request, [
-           'name' => 'required | string | min:3',
-           'phone' => 'nullable | regex:/[0-9]{10}/',
-        ]);
+//        $this->validate($request, [
+//           'name' => 'required | string | min:3',
+//           'phone' => 'nullable | regex:/[0-9]{10}/',
+//        ]);
 
         try{
             $postData = $request->except(['_token', 'profile_img']);

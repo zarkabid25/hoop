@@ -1,6 +1,15 @@
 @extends('portal.layout')
 @section('title', 'Users')
 
+@section('css')
+    <style>
+        table, th, td {
+            /*border: 1px solid black;*/
+            border-collapse: collapse;
+        }
+    </style>
+@endsection
+
 @section('content')
     <div class="container">
         <div class="card">
@@ -18,7 +27,7 @@
 
                     <div class="form-group">
                         <label for="name">Name: <span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ $user->name }}" id="name" required autocomplete="name" autofocus />
+                        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ $user->name }}" id="name" autocomplete="name" autofocus />
 
                         @error('name')
                             <span class="invalid-feedback" role="alert">
@@ -29,7 +38,7 @@
 
                     <div class="form-group">
                         <label for="email">Email: <span class="text-danger">*</span></label>
-                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ $user->email }}" id="email" required autocomplete="email" />
+                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ $user->email }}" id="email" autocomplete="email" />
 
                         @error('email')
                             <span class="invalid-feedback" role="alert">
@@ -65,10 +74,184 @@
                         @enderror
                     </div>
 
-                    <div class="mt-3">
+                    <div class="mt-3 d-flex justify-content-end">
                         <button type="submit" class="btn btn-primary">Update</button>
                     </div>
                 </form>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            @if(!empty($placement))
+                                <form action="{{ route('placement-price-update') }}" method="post">
+                                    @csrf
+
+                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                    <input type="hidden" name="placement_id" value="{{ $placement->id }}">
+
+                                    <table style="width: 100%">
+                                        <tr>
+                                            <th colspan="4" style="padding: 20px; font-size: 15px">Placement</th>
+                                            <th style="text-align: center; padding: 20px; font-size: 15px">Price</th>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Bags</strong></p></td>
+                                            <td><input type="number" name="bags" value="{{ $placement->bags }}" class="form-control" /></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="4"><p><strong>Cap</strong></p></td>
+                                            <td><input type="number" name="cap" class="form-control" value="{{ $placement->cap }}" /></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="4"><p><strong>Chest</strong></p></td>
+                                            <td><input type="number" name="chest" class="form-control" value="{{ $placement->chest }}" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Gloves</strong></p></td>
+                                            <td><input type="number" name="gloves" class="form-control" value="{{ $placement->gloves }}" /></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="4"><p><strong>Cap Side</strong></p></td>
+                                            <td><input type="number" name="cap_side" class="form-control" value="{{ $placement->cap_side }}" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Cap Back</strong></p></td>
+                                            <td><input type="number" name="cap_back" value="{{ $placement->cap_back }}" class="form-control" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Towel</strong></p></td>
+                                            <td><input type="number" name="towel" value="{{ $placement->towel }}" class="form-control" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>JacketBack</strong></p></td>
+                                            <td><input type="number" name="jacketback" value="{{ $placement->jacketback }}" class="form-control" /></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="4"><p><strong>Sleeve</strong></p></td>
+                                            <td><input type="number" name="sleeve" class="form-control" value="{{ $placement->sleeve }}" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Patches</strong></p></td>
+                                            <td><input type="number" name="patches" class="form-control" value="{{ $placement->patches }}" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Visor</strong></p></td>
+                                            <td><input type="number" name="visor" class="form-control" value="{{ $placement->visor }}" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Table Cloth</strong></p></td>
+                                            <td><input type="number" name="table_cloth" class="form-control" value="{{ $placement->table_cloth }}" /></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="4"><p><strong>Beanic Caps</strong></p></td>
+                                            <td><input type="number" name="beanie_caps" class="form-control" value="{{ $placement->beanie_caps }}" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Apron</strong></p></td>
+                                            <td><input type="number" name="apron" class="form-control" value="{{ $placement->apron }}" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Other</strong></p></td>
+                                            <td><input type="number" name="other" class="form-control" value="{{ $placement->other }}" /></td>
+                                        </tr>
+                                    </table>
+
+                                    <div class="d-flex justify-content-end mt-3">
+                                        <button type="submit" class="btn" style="background-color: #29babf; color: white">Update</button>
+                                    </div>
+                                </form>
+                            @else
+                                <form action="{{ route('placement-price-update') }}" method="post">
+                                    @csrf
+
+                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+
+                                    <table style="width: 100%">
+                                        <tr>
+                                            <th colspan="4" style="padding: 20px; font-size: 15px">Placement</th>
+                                            <th style="text-align: center; padding: 20px; font-size: 15px">Price</th>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Bags</strong></p></td>
+                                            <td><input type="number" name="bags" value="{{ old('bags') }}" class="form-control" /></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="4"><p><strong>Cap</strong></p></td>
+                                            <td><input type="number" name="cap" class="form-control" value="{{ old('cap') }}" /></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="4"><p><strong>Chest</strong></p></td>
+                                            <td><input type="number" name="chest" class="form-control" value="{{ old('chest') }}" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Gloves</strong></p></td>
+                                            <td><input type="number" name="gloves" class="form-control" value="{{ old('gloves') }}" /></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="4"><p><strong>Cap Side</strong></p></td>
+                                            <td><input type="number" name="cap_side" class="form-control" value="{{ old('cap_side') }}" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Cap Back</strong></p></td>
+                                            <td><input type="number" name="cap_back" value="{{ old('cap_back') }}" class="form-control" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Towel</strong></p></td>
+                                            <td><input type="number" name="towel" value="{{ old('towel') }}" class="form-control" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>JacketBack</strong></p></td>
+                                            <td><input type="number" name="jacketback" value="{{ old('jacketback') }}" class="form-control" /></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="4"><p><strong>Sleeve</strong></p></td>
+                                            <td><input type="number" name="sleeve" class="form-control" value="{{ old('sleeve') }}" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Patches</strong></p></td>
+                                            <td><input type="number" name="patches" class="form-control" value="{{ old('patches') }}" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Visor</strong></p></td>
+                                            <td><input type="number" name="visor" class="form-control" value="{{ old('visor') }}" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Table Cloth</strong></p></td>
+                                            <td><input type="number" name="table_cloth" class="form-control" value="{{ old('table_cloth') }}" /></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="4"><p><strong>Beanic Caps</strong></p></td>
+                                            <td><input type="number" name="beanie_caps" class="form-control" value="{{ old('beanie_caps') }}" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Apron</strong></p></td>
+                                            <td><input type="number" name="apron" class="form-control" value="{{ old('apron') }}" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><p><strong>Other</strong></p></td>
+                                            <td><input type="number" name="other" class="form-control" value="{{ old('other') }}" /></td>
+                                        </tr>
+                                    </table>
+
+                                    <div class="d-flex justify-content-end mt-3">
+                                        <button type="submit" class="btn" style="background-color: #29babf; color: white">Update</button>
+                                    </div>
+                                </form>
+                            @endif
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

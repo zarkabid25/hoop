@@ -35,7 +35,15 @@
 
                                 <tr>
                                     <th>Format: </th>
-                                    <td>{{ $order->format ?? '--' }}</td>
+                                    @php
+                                        $formats = json_decode($order->format);
+                                    @endphp
+                                    <td>
+                                        @forelse($formats as $format)
+                                            <span class="badge badge-secondary">{{ $format }}</span>
+                                        @empty
+                                        @endforelse
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -86,8 +94,16 @@
 
                         <div class="card-body">
                             @php
-                                $img = $order->image ?? 'No-Image.png';
+                                $img = json_decode($order->image);
+
+                                if ($img == null) {
+                                    $img = $order->image ?? 'no-file.png';
+                                }
                             @endphp
+{{--                            @php--}}
+{{--                            --}}
+{{--                                $img = $order->image ?? 'No-Image.png';--}}
+{{--                            @endphp--}}
 
                             <table>
                                 <tr>
@@ -96,7 +112,7 @@
                                 </tr>
 
                                 <tr>
-                                    @if(auth()->user()->role == 'admin')
+                                    @if(auth()->user()->role == 'admin' || request()->route()->getName() != 'quote.show')
                                         <th>Order Status: </th>
                                         <td>
                                             <select name="order_status" class="form-control" id="order_status">
@@ -106,19 +122,25 @@
                                             </select>
                                         </td>
                                     @else
-                                        <th>Order Status: </th>
-                                        <td>@if($order->order_status == '0') Pending @elseif ($order->order_status == '1') Approved @else Cancelled @endif</td>
+                                        @if(request()->route()->getName() != 'quote.show')
+                                            <th>Order Status: </th>
+                                            <td>@if($order->order_status == '0') Pending @elseif ($order->order_status == '1') Approved @else Cancelled @endif</td>
+                                        @endif
                                     @endif
                                 </tr>
 
-                                <tr>
-                                    <th>Urgent: </th>
-                                    <td>{{ $order->urgent ?? '--' }}</td>
-                                </tr>
-
+                                @php
+                                    $placements = $order->customer->placements->toArray();
+                                    if(array_key_exists($order->placement, $placements)){
+                                        $matchingValue = $placements[$order->placement];
+                                    }
+                                    else{
+                                        $matchingValue = '--';
+                                    }
+                                @endphp
                                 <tr>
                                     <th>Price: </th>
-                                    <td>{{ $order->price ?? '--' }}</td>
+                                    <td>{{ $matchingValue }}</td>
                                 </tr>
 
                                 <tr>
@@ -138,9 +160,19 @@
                                 </tr>
 
                                 <tr>
-                                    <th>Image File: </th>
+                                    <th>File: </th>
                                     <td>
-                                        <img src="{{ asset('images'. "/". $img) }}" alt="No Image" width="60" />
+{{--                                        <img src="{{ asset('images'. "/". $img) }}" alt="No Image" width="60" />--}}
+                                        @if(is_array($img))
+                                            @foreach($img as $val)
+                                                <a href="{{ route('image.download', ['filename' => $val]) }}">{{ $val }}</a>
+                                                {{--                                                <a href="{{ asset('images'. "/". $val) }}">{{ $val }}</a><br />--}}
+                                            @endforeach
+                                        @else
+                                            <a href="{{ route('image.download', ['filename' => $img]) }}">{{ $img }}</a>
+                                            {{--                                            <a href="{{ asset('images'. "/". $img) }}">{{ $img }}<a>--}}
+                                            {{--                                            <img src="{{ asset('images'. "/". $img) }}" alt="No Image" width="60"/>--}}
+                                        @endif
                                     </td>
                                 </tr>
                             </table>
@@ -148,67 +180,6 @@
                         </div>
                     </div>
                 </div>
-
-                @if(auth()->user()->role == 'order')
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header bg-cyan">
-                                <h6>Assign Order</h6>
-                            </div>
-
-                            <div class="card-body">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th>Sr.#</th>
-                                        <th>Developer Name</th>
-                                        <th>Assign Order</th>
-                                    </tr>
-                                    </thead>
-
-                                    <tbody>
-                                    @php $count = 1; @endphp
-                                    @forelse($developers as $developer)
-                                        @php
-                                            if($developer->orderAssign){
-                                                $orderStatus = $developer->orderAssign->status;
-                                            }
-                                        @endphp
-
-                                        <tr>
-                                            <td>{{ $count++ }}</td>
-                                            <td>{{ $developer->name }}</td>
-                                            <td>
-                                                <div class="dropdown">
-                                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        @if($orderStatus == 'unassign')
-                                                            Unassigned
-                                                        @elseif($orderStatus == 'assign')
-                                                            Assigned
-                                                        @else
-                                                            Assign Order
-                                                        @endif
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        <a class="dropdown-item" href="{{ route('order-assign', ['devId' => $developer->id, 'orderId' => $order->id, 'status' => 'unassign']) }}">Unassign</a>
-                                                        <a class="dropdown-item" href="{{ route('order-assign', ['devId' => $developer->id, 'orderId' => $order->id, 'status' => 'assign']) }}">Assign</a>
-                                                    </div>
-                                                </div>
-
-                                                {{--                                            <select class="form-control" id="assign_task">--}}
-                                                {{--                                                <option value="0">Unassign</option>--}}
-                                                {{--                                                <option value="1">Assign</option>--}}
-                                                {{--                                            </select>--}}
-                                            </td>
-                                        </tr>
-                                    @empty
-                                    @endforelse
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                @endif
             </div>
         @else
             <p>No record found.</p>

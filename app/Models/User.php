@@ -50,4 +50,8 @@ class User extends Authenticatable
     public function orderAssign(){
         return $this->hasOne(AssignOrder::class, 'developer_id', 'id');
     }
+
+    public function placements(){
+        return $this->hasOne(Placement::class, 'user_id', 'id');
+    }
 }
