@@ -42,6 +42,10 @@
                             </div>
                         </div>
                     </div>
+
+                    <div style="text-align: right">
+                        <button type="button" class="btn" style="color: white; background-color: #17a2b8" data-toggle="modal" data-target="#exampleModal">View Placement Prices</button>
+                    </div>
                 @endif
 
                 <form action="{{ route('profile.update', ['id' => $user->id]) }}" method="post" enctype="multipart/form-data">
@@ -274,41 +278,65 @@
 
                     <div class="row" style="justify-content: right">
                         <div class="col-md-4 mb-3">
-                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-header d-flex justify-content-center">
-                <h6>Placement Prices</h6>
-            </div>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="exampleModalLabel">Placement Prices</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Price</th>
+                            </tr>
+                            </thead>
 
-            <div class="card-body">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
+                            <tbody>
 
-                    <tbody>
-                        @forelse($user->placements->toArray() as $key=>$value)
-                            @if($key !== 'id' && $key !== 'user_id' && $key !== 'created_at' && $key !== 'updated_at')
-                                <tr>
-                                    <td>{{ str_replace('_', ' ', $key) }}</td>
-                                    <td>{{ $value }}</td>
-                                </tr>
+                            @if(!empty($user->placements))
+                                @forelse($user->placements->toArray() as $key=>$value)
+                                    @if($key !== 'id' && $key !== 'user_id' && $key !== 'created_at' && $key !== 'updated_at')
+                                        <tr>
+                                            <td>{{ str_replace('_', ' ', $key) }}</td>
+                                            <td>{{ $value }}</td>
+                                        </tr>
+                                    @endif
+                                @empty
+                                @endforelse
                             @endif
-                        @empty
-                        @endforelse
-                    </tbody>
-                </table>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+{{--                        <button type="button" class="btn btn-primary">Save changes</button>--}}
+                    </div>
+                </div>
             </div>
         </div>
+
+{{--        <div class="card">--}}
+{{--            <div class="card-header d-flex justify-content-center">--}}
+{{--                <h6></h6>--}}
+{{--            </div>--}}
+
+{{--            <div class="card-body">--}}
+{{--                --}}
+{{--            </div>--}}
+{{--        </div>--}}
     </div>
 @endsection
 

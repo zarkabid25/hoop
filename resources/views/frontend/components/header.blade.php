@@ -135,7 +135,7 @@
                             <div class="header__info d-flex align-items-center justify-content-between">
                                 <div class="logo">
                                     <a href="{{ url('/') }}" class="logo-image">
-                                        <img class="mb-0" src="{{ asset('assets/img/logo/brand.png') }}" width="100" alt="logo">
+                                        <img class="mb-0" src="{{ asset('assets/img/logo/new-logo.png') }}" width="100" alt="logo">
                                     </a>
                                 </div>
                                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

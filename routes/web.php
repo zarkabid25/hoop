@@ -62,24 +62,23 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function (){
             ->count();
 
         $allOrders = Order::with('customer')->orderBy('id', 'DESC')->get();
+        $orders = $allOrders->where('order_status', 0);
+        $outStandingsCount = $orders->count();
+//        $filteredOrders = $allOrders->filter(function ($order) {
+//            return $order->where('order_status', 0);
+//        });
 
-        $filteredOrders = $allOrders->filter(function ($order) {
-            $createdAt = Carbon::parse($order->created_at);
-            return $createdAt->isToday() || $createdAt->isYesterday();
-        });
-
-        $filteredOrdersCollection = collect($filteredOrders);
-        $orders = $filteredOrdersCollection->values();
+//        $filteredOrdersCollection = collect($filteredOrders);
+//        $orders = $filteredOrdersCollection->values();
 
         $allOrders = $allOrders->count();
-
 
         $cancelledOrders = Order::where('order_status', '2')
             ->whereYear('created_at', $currentYear)
             ->whereMonth('created_at', $currentMonth)
             ->count();
 
-        return view('portal.admin.dashboard', compact('monthQuotes', 'monthOrders', 'allOrders', 'orders', 'cancelledOrders'));
+        return view('portal.admin.dashboard', compact('monthQuotes', 'monthOrders', 'allOrders', 'orders', 'cancelledOrders', 'outStandingsCount'));
     })->name('dashboard.admin');
 
     Route::resources([
@@ -146,13 +145,14 @@ Route::group(['middleware' => 'auth', 'prefix' => 'customer'], function(){
             ->count();
 
         $allOrders = Order::with('customer')->where('customer_id', $userId)->orderBy('id', 'DESC')->get();
+        $orders = $allOrders->where('order_status', 0);
+        $outStandingsCount = $orders->count();
+//        $filteredOrders = $allOrders->filter(function ($order) use ($userId) {
+//            return $order->customer_id == $userId && Carbon::parse($order->created_at)->isToday();
+//        });
 
-        $filteredOrders = $allOrders->filter(function ($order) use ($userId) {
-            return $order->customer_id == $userId && Carbon::parse($order->created_at)->isToday();
-        });
-
-        $filteredOrdersCollection = collect($filteredOrders);
-        $orders = $filteredOrdersCollection->values();
+//        $filteredOrdersCollection = collect($filteredOrders);
+//        $orders = $filteredOrdersCollection->values();
 
         $totalPrice = $allOrders->sum('price');
         $allOrdersCount = $allOrders->count();
@@ -163,7 +163,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'customer'], function(){
             ->whereMonth('created_at', $currentMonth)
             ->count();
 
-        return view('portal.customer.dashboard', compact('monthQuotes', 'monthOrders', 'orders', 'cancelledOrders', 'allOrdersCount', 'totalPrice'));
+        return view('portal.customer.dashboard', compact('monthQuotes', 'monthOrders', 'orders', 'cancelledOrders', 'allOrdersCount', 'totalPrice', 'outStandingsCount'));
     })->name('dashboard.customer');
 
     Route::resource('quote', \App\Http\Controllers\Customer\QuotesController::class);
@@ -186,7 +186,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'developer'], function(){
 
         $orders = \App\Models\AssignOrder::where('developer_id', $userId)
             ->where('status', 'assign')
-            ->whereDate('created_at', $currentDate)
             ->get();
 
         $allOrders = \App\Models\AssignOrder::where('developer_id', $userId)
@@ -213,12 +212,12 @@ Route::group(['middleware' => 'auth', 'prefix' => 'sales'], function(){
                 ->whereYear('created_at', $currentYear)
                 ->count();
 
-            $allOrders = Order::whereIn('customer_id', $users->pluck('id'))->count();
+            $allOrders = Order::whereIn('customer_id', $users->pluck('id'))->where('order_status', '0')->count();
 
             $today = Carbon::today();
 
             $orders = Order::whereIn('customer_id', $users->pluck('id'))
-                ->whereDate('created_at', $today)
+                ->where('created_at', '0')
                 ->get();
 
             return view('portal.sales.dashboard', compact('monthOrders', 'allOrders', 'userCount', 'orders'));

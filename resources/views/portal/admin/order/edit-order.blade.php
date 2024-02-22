@@ -73,7 +73,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="fabric">Select Fabric</label>
-                                                <select class="form-control" name="fabric" required id="fabric">
+                                                <select class="form-control js-example-tags" name="fabric" required id="fabric">
                                                     <option selected disabled>Select Fabric</option>
                                                     <option value="Apron" {{ ($order->fabric == 'Apron') ? 'selected' : '' }}>Apron</option>
                                                     <option value="Blanket" {{ ($order->fabric == 'Blanket') ? 'selected' : '' }}>Blanket</option>
@@ -108,7 +108,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="placement">Select Placement</label>
-                                                <select class="form-control" name="placement" required id="placement">
+                                                <select class="form-control js-example-tags" name="placement" required id="placement">
                                                     <option selected disabled>Select Placement</option>
                                                     <option value="Bags" {{ ($order->placement == 'Bags') ? 'selected' : '' }}>Bags</option>
                                                     <option value="Cap" {{ ($order->placement == 'Cap') ? 'selected' : '' }}>Cap</option>
@@ -145,7 +145,7 @@
                                                     <option value="jef" {{ (in_array('jef', $order->format)) ? 'selected' : '' }}>jef</option>
                                                     <option value="ksm" {{ (in_array('ksm', $order->format)) ? 'selected' : '' }}>ksm</option>
                                                     <option value="pes" {{ (in_array('pes', $order->format)) ? 'selected' : '' }}>pes</option>
-                                                    <option value="pof" {{ (in_array('pof', $order->format)) ? 'selected' : '' }}>pof</option>
+                                                    <option value="pdf" {{ (in_array('pdf', $order->format)) ? 'selected' : '' }}>pdf</option>
                                                     <option value="tap" {{ (in_array('tap', $order->format)) ? 'selected' : '' }}>tap</option>
                                                     <option value="xxx" {{ (in_array('xxx', $order->format)) ? 'selected' : '' }}>xxx</option>
                                                     <option value="ofm" {{ (in_array('ofm', $order->format)) ? 'selected' : '' }}>ofm</option>
@@ -153,6 +153,7 @@
                                                     <option value="sus" {{ (in_array('sus', $order->format)) ? 'selected' : '' }}>sus</option>
                                                     <option value="hus" {{ (in_array('hus', $order->format)) ? 'selected' : '' }}>hus</option>
                                                     <option value="ngs" {{ (in_array('ngs', $order->format)) ? 'selected' : '' }}>ngs</option>
+                                                    <option value="jpg" {{ (in_array('jpg', $order->format)) ? 'selected' : '' }}>jpg</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -261,7 +262,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="fabric">Select Fabric</label>
-                                                <select class="form-control" name="fabric" required id="fabric">
+                                                <select class="form-control js-example-tags" name="fabric" required id="fabric">
                                                     <option selected disabled>Select Fabric</option>
                                                     <option value="Apron" {{ ($order->fabric == 'Apron') ? 'selected' : '' }}>Apron</option>
                                                     <option value="Blanket" {{ ($order->fabric == 'Blanket') ? 'selected' : '' }}>Blanket</option>
@@ -296,7 +297,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="placement">Select Placement</label>
-                                                <select class="form-control" name="placement" required id="placement">
+                                                <select class="form-control js-example-tags" name="placement" required id="placement">
                                                     <option selected disabled>Select Placement</option>
                                                     <option value="bags" {{ ($order->placement == 'bags') ? 'selected' : '' }}>Bags</option>
                                                     <option value="cap" {{ ($order->placement == 'cap') ? 'selected' : '' }}>Cap</option>
@@ -332,7 +333,7 @@
                                                 <option value="jef" {{ (in_array('jef', $order->format)) ? 'selected' : '' }}>jef</option>
                                                 <option value="ksm" {{ (in_array('ksm', $order->format)) ? 'selected' : '' }}>ksm</option>
                                                 <option value="pes" {{ (in_array('pes', $order->format)) ? 'selected' : '' }}>pes</option>
-                                                <option value="pof" {{ (in_array('pof', $order->format)) ? 'selected' : '' }}>pof</option>
+                                                <option value="pdf" {{ (in_array('pdf', $order->format)) ? 'selected' : '' }}>pdf</option>
                                                 <option value="tap" {{ (in_array('tap', $order->format)) ? 'selected' : '' }}>tap</option>
                                                 <option value="xxx" {{ (in_array('xxx', $order->format)) ? 'selected' : '' }}>xxx</option>
                                                 <option value="ofm" {{ (in_array('ofm', $order->format)) ? 'selected' : '' }}>ofm</option>
@@ -340,6 +341,7 @@
                                                 <option value="sus" {{ (in_array('sus', $order->format)) ? 'selected' : '' }}>sus</option>
                                                 <option value="hus" {{ (in_array('hus', $order->format)) ? 'selected' : '' }}>hus</option>
                                                 <option value="ngs" {{ (in_array('ngs', $order->format)) ? 'selected' : '' }}>ngs</option>
+                                                <option value="jpg" {{ (in_array('jpg', $order->format)) ? 'selected' : '' }}>jpg</option>
                                             </select>
                                         </div>
                                     </div>
@@ -481,6 +483,10 @@
                                                     <option value="ai" {{ (in_array('ai', $order->format)) ? 'selected' : '' }}>ai</option>
                                                     <option value="cdr" {{ (in_array('cdr', $order->format)) ? 'selected' : '' }}>cdr</option>
                                                     <option value="eps" {{ (in_array('eps', $order->format)) ? 'selected' : '' }}>eps</option>
+                                                    <option value="pdf" {{ (in_array('pdf', $order->format)) ? 'selected' : '' }}>pdf</option>
+                                                    <option value="jpg" {{ (in_array('jpg', $order->format)) ? 'selected' : '' }}>jpg</option>
+                                                    <option value="png" {{ (in_array('png', $order->format)) ? 'selected' : '' }}>png</option>
+                                                    <option value="svg" {{ (in_array('svg', $order->format)) ? 'selected' : '' }}>svg</option>
                                                 </select>
                                             </div>
                                         </div>

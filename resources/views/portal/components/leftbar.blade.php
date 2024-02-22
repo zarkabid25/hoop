@@ -3,7 +3,7 @@
     <!-- Sidebar user panel (optional) -->
     <div class="user-panel mt-3 pb-3 mb-3 d-flex" style="justify-content: center;">
         <div class="image" style="padding-left: 0">
-            <img src="{{ asset('images/brand.png') }}" class="img-circle elevation-2" alt="User Image" style="width: 8rem !important;">
+            <img src="{{ asset('assets/img/logo/new-logo.png') }}" class="img-circle elevation-2" alt="User Image" style="width: 8rem !important;">
         </div>
     </div>
 
@@ -53,7 +53,7 @@
             @endif
 
             <li class="nav-item {{ (request()->routeIs('order.index') || request()->routeIs('order.create')) ? 'menu-is-opening menu-open' : '' }}">
-                    <a href="javascript:void(0)" class="nav-link">
+                <a href="javascript:void(0)" class="nav-link">
                     <i class="nav-icon fas fa-briefcase" style="color: lightsalmon"></i>
                     <p>
                         Orders
@@ -78,7 +78,7 @@
                 </ul>
             </li>
 
-            @if(auth()->user()->role == 'customer')
+            @if(auth()->user()->role == 'customer' || auth()->user()->role == 'admin')
                 <li class="nav-item {{ (request()->routeIs('quote.index') || request()->routeIs('quote.create')) ? 'menu-is-opening menu-open' : '' }}">
                     <a href="javascript:void(0)" class="nav-link {{ (request()->routeIs('quote.index') || request()->routeIs('quote.create')) ? 'active' : '' }}">
                         <i class="nav-icon fas fa-pen" style="color: khaki"></i>

@@ -105,7 +105,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="placement">Select Placement</label>
-                                                <select class="form-control" name="placement" required id="placement">
+                                                <select class="form-control js-example-tags" name="placement" required id="placement">
                                                     <option selected disabled>Select Placement</option>
                                                     <option value="bags">Bags</option>
                                                     <option value="cap">Cap</option>
@@ -135,14 +135,14 @@
                                                     <option value="cdr">cdr</option>
                                                     <option value="cnd">cnd</option>
                                                     <option value="dsb">dsb</option>
-                                                    <option value="dst">dst</option>
+                                                    <option value="dst" selected>dst</option>
                                                     <option value="dsz">dsz</option>
-                                                    <option value="emb">emb</option>
+                                                    <option value="emb" selected>emb</option>
                                                     <option value="exp">exp</option>
                                                     <option value="jef">jef</option>
                                                     <option value="ksm">ksm</option>
                                                     <option value="pes">pes</option>
-                                                    <option value="pof">pof</option>
+                                                    <option value="pdf" selected>pdf</option>
                                                     <option value="tap">tap</option>
                                                     <option value="xxx">xxx</option>
                                                     <option value="ofm">ofm</option>
@@ -150,6 +150,7 @@
                                                     <option value="sus">sus</option>
                                                     <option value="hus">hus</option>
                                                     <option value="ngs">ngs</option>
+                                                    <option value="jpg" selected>jpg</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -315,7 +316,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="color_type">Colors Type</label>
-                                            <select class="form-control" name="color_type" required id="color_type">
+                                            <select class="form-control js-example-tags" name="color_type" required id="color_type">
                                                 <option selected disabled>Select Color Type</option>
                                                 <option value="PMS">PMS</option>
                                                 <option value="RGB">RGB</option>
@@ -329,9 +330,13 @@
                                             <label for="format">Select Format</label>
                                             <select class="form-control js-example-tags" name="format[]" required id="format" multiple="multiple">
                                                 <option>Other</option>
-                                                <option value="ai">ai</option>
-                                                <option value="cdr">cdr</option>
+                                                <option value="ai" selected>ai</option>
+                                                <option value="cdr" selected>cdr</option>
                                                 <option value="eps">eps</option>
+                                                <option value="pdf" selected>pdf</option>
+                                                <option value="jpg" selected>jpg</option>
+                                                <option value="png" selected>png</option>
+                                                <option value="svg" selected>svg</option>
                                             </select>
                                         </div>
                                     </div>
@@ -417,7 +422,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="patch_type">Select Patch Type</label>
-                                            <select class="form-control" name="patch_type" required id="patch_type">
+                                            <select class="form-control js-example-tags" name="patch_type" required id="patch_type">
                                                 <option selected disabled>Select Patch Type</option>
                                                 <option value="Embroidery">EMBROIDERY</option>
                                                 <option value="Chenille">CHENILLE</option>

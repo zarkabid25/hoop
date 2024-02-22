@@ -29,12 +29,12 @@
                     <div class="inner">
                         <h3>{{ $allOrders }}</h3>
 
-                        <p>Total Orders</p>
+                        <p>Pending Orders</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-person-add"></i>
                     </div>
-                    <span class="small-box-footer">Lifetime</span>
+                    <span class="small-box-footer" style="padding: 12px"></span>
                     {{--                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>--}}
                 </div>
             </div>
@@ -70,6 +70,7 @@
                         <th>Design Type</th>
                         <th>Customer Name</th>
                         <th>Order Status</th>
+                        <th>Date</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -93,6 +94,7 @@
                                         <span class="badge badge-danger">Cancelled</span>
                                     @endif
                                 </td>
+                                <td>{{ date('Y-m-d H:i:s', strtotime($order->created_at)) }}</td>
                                 <td>
                                     <div>
                                         <div style="display: inline-block">

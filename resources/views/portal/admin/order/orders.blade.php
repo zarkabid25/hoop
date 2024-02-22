@@ -33,6 +33,9 @@
                                 <th>Referred</th>
                             @endif
                             <th>Order Status</th>
+                            @if(auth()->user()->role == 'admin')
+                                <th>Modified At</th>
+                            @endif
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -75,6 +78,9 @@
                                             Cancelled
                                         @endif
                                     </td>
+                                    @if(auth()->user()->role == 'admin')
+                                        <td>{{ ($order->updated_at != $order->created_at) ? 'Yes' : '--' }}</td>
+                                    @endif
                                     <td>
                                         <div>
                                             <div style="display: inline-block">
@@ -110,9 +116,9 @@
                                     <td>{{ ucwords($order->order->order_type) }}</td>
                                     <td>{{ ucwords($order->order->customer->name) }}</td>
                                     <td>
-                                        @if($order->order_status == '0')
+                                        @if($order->order_status == 'pending')
                                             <span class="badge badge-info">Pending</span>
-                                        @elseif ($order->order_status == '1')
+                                        @elseif ($order->order_status == 'approved')
                                             <span class="badge badge-success">Approved</span>
                                         @else
                                             <span class="badge badge-danger">Cancelled</span>

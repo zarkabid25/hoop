@@ -74,7 +74,7 @@
                 <!-- small box -->
                 <div class="small-box bg-secondary">
                     <div class="inner">
-                        <h3>0</h3>
+                        <h3>{{ $outStandingsCount }}</h3>
 
                         <p style="font-size: 14px">Total Outstanding</p>
                     </div>

@@ -69,9 +69,9 @@
                             <td>{{ ucwords($order->order->order_type) }}</td>
                             <td>{{ ucwords($order->order->customer->name) }}</td>
                             <td>
-                                @if($order->order_status == '0')
+                                @if($order->order_status == 'pending')
                                     <span class="badge badge-info">Pending</span>
-                                @elseif ($order->order_status == '1')
+                                @elseif ($order->order_status == 'approved')
                                     <span class="badge badge-success">Approved</span>
                                 @else
                                     <span class="badge badge-danger">Cancelled</span>

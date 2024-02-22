@@ -25,6 +25,9 @@
                         <th>Price</th>
                         <th>Design Type</th>
 {{--                        <th>Special Instruction</th>--}}
+                        @if(auth()->user()->role == 'admin')
+                            <th>Modified At</th>
+                        @endif
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -39,6 +42,9 @@
                             <td>{{ $quote->price }}</td>
                             <td>{{ ucwords($quote->order_type) }}</td>
 {{--                            <td>{{ (strlen($quote->special_instruct) <= 20) ? $quote->special_instruct : $quote->special_instruct."..."}}</td>--}}
+                            @if(auth()->user()->role == 'admin')
+                                <td>{{ ($quote->updated_at != $quote->created_at) ? 'Yes' : '--' }}</td>
+                            @endif
                             <td>
                                 <div>
                                     <div style="display: inline-block">
@@ -50,14 +56,14 @@
                                         <a href="{{ route('quote.edit', ['quote' => $quote->id]) }}" class="btn btn-info">Edit</a>
                                     </div>
 
-                                    <div style="display: inline-block">
-                                        <form action="{{ route('quote.destroy', ['quote' => $quote->id]) }}" method="post" class="delete_form">
-                                            @method('delete')
-                                            @csrf
+{{--                                    <div style="display: inline-block">--}}
+{{--                                        <form action="{{ route('quote.destroy', ['quote' => $quote->id]) }}" method="post" class="delete_form">--}}
+{{--                                            @method('delete')--}}
+{{--                                            @csrf--}}
 
-                                            <button type="button" class="btn btn-danger delete_btn">Delete</button>
-                                        </form>
-                                    </div>
+{{--                                            <button type="button" class="btn btn-danger delete_btn">Delete</button>--}}
+{{--                                        </form>--}}
+{{--                                    </div>--}}
                                 </div>
                             </td>
                         </tr>

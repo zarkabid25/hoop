@@ -25,7 +25,12 @@ class QuotesController extends Controller
 //
 //        }
 
-        $quotes = Quote::where('customer_id', auth()->user()->id)->orderBy('id', 'DESC')->get();
+        if(auth()->user()->role == 'customer'){
+            $quotes = Quote::where('customer_id', auth()->user()->id)->orderBy('id', 'DESC')->get();
+        }
+        else{
+            $quotes = Quote::orderBy('id', 'DESC')->get();
+        }
         return view('portal.customer.quotes.quotes', compact('quotes'));
     }
 
